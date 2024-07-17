@@ -12,6 +12,6 @@ class PendidikanTerakhir extends Model
     protected $table = 'pendidikan_terakhir';
 
     protected $fillable = [
-        'pendidikan_terakhir',
+        'nama_pendidikan_terakhir',
     ];
 }
