@@ -2,17 +2,20 @@
 
 namespace App\Filament\Clusters\Employee\Resources;
 
-use App\Filament\Clusters\Employee;
-use App\Filament\Clusters\Employee\Resources\KaryawanResource\Pages;
-use App\Filament\Clusters\Employee\Resources\KaryawanResource\RelationManagers;
-use App\Models\Karyawan;
 use Filament\Forms;
-use Filament\Forms\Form;
-use Filament\Resources\Resource;
 use Filament\Tables;
+use App\Models\Karyawan;
+use Filament\Forms\Form;
 use Filament\Tables\Table;
+use Filament\Resources\Resource;
+use App\Filament\Clusters\Employee;
+use Filament\Forms\Components\Wizard;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\DatePicker;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use App\Filament\Clusters\Employee\Resources\KaryawanResource\Pages;
+use App\Filament\Clusters\Employee\Resources\KaryawanResource\RelationManagers;
 
 class KaryawanResource extends Resource
 {
@@ -26,8 +29,26 @@ class KaryawanResource extends Resource
     {
         return $form
             ->schema([
-                //
-            ]);
+                Wizard::make([
+                    Wizard\Step::make('Order')
+                        ->schema([
+                        TextInput::make('npy'),
+                        TextInput::make('nama_lengkap'),
+                        TextInput::make('nik'),
+                        TextInput::make('tempat_lahir'),
+                        DatePicker::make('tanggal_lahir')
+                        ]),
+                    Wizard\Step::make('Delivery')
+                        ->schema([
+                            // ...
+                        ]),
+                    Wizard\Step::make('Billing')
+                        ->schema([
+                            // ...
+                        ]),
+                ])
+                
+            ])->columns(1);
     }
 
     public static function table(Table $table): Table
