@@ -9,6 +9,8 @@ use Filament\Forms\Form;
 use Filament\Tables\Table;
 use Filament\Resources\Resource;
 use App\Filament\Clusters\Employee;
+use Filament\Forms\Components\Grid;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Wizard;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\DatePicker;
@@ -32,11 +34,23 @@ class KaryawanResource extends Resource
                 Wizard::make([
                     Wizard\Step::make('Order')
                         ->schema([
-                        TextInput::make('npy'),
-                        TextInput::make('nama_lengkap'),
-                        TextInput::make('nik'),
-                        TextInput::make('tempat_lahir'),
-                        DatePicker::make('tanggal_lahir')
+                            Grid::make()
+                            ->schema([
+                                TextInput::make('npy'),
+                                TextInput::make('nik'),
+                                TextInput::make('nama_lengkap'),
+                            ])->columns(3),
+                            Grid::make()
+                            ->schema([
+                                Select::make('jenis_kelamin')
+                                ->options([
+                                'L' => 'Laki-laki',
+                                'P' => 'Perempuan',
+                                ]),               
+                                TextInput::make('tempat_lahir'),
+                                DatePicker::make('tanggal_lahir'),
+                            ])->columns(3),  
+                                 
                         ]),
                     Wizard\Step::make('Delivery')
                         ->schema([
