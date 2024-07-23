@@ -2,17 +2,18 @@
 
 namespace App\Filament\Clusters\Data_Master\Resources;
 
-use App\Filament\Clusters\Data_Master;
-use App\Filament\Clusters\Data_Master\Resources\StatusKepegawaianResource\Pages;
-use App\Filament\Clusters\Data_Master\Resources\StatusKepegawaianResource\RelationManagers;
-use App\Models\StatusKepegawaian;
 use Filament\Forms;
-use Filament\Forms\Form;
-use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Forms\Form;
 use Filament\Tables\Table;
+use Filament\Resources\Resource;
+use App\Models\StatusKepegawaian;
+use App\Filament\Clusters\Data_Master;
+use Filament\Tables\Columns\TextColumn;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use App\Filament\Clusters\Data_Master\Resources\StatusKepegawaianResource\Pages;
+use App\Filament\Clusters\Data_Master\Resources\StatusKepegawaianResource\RelationManagers;
 
 class StatusKepegawaianResource extends Resource
 {
@@ -34,13 +35,12 @@ class StatusKepegawaianResource extends Resource
     {
         return $table
             ->columns([
-                //
+                TextColumn::make('status')
             ])
             ->filters([
                 //
             ])
             ->actions([
-                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
             ])
