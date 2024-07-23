@@ -7,13 +7,21 @@ use Filament\Tables;
 use App\Models\Karyawan;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
+use Illuminate\Support\Carbon;
 use Filament\Resources\Resource;
 use App\Filament\Clusters\Employee;
 use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Wizard;
+use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Textarea;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
+use Filament\Support\Enums\IconPosition;
+use Filament\Tables\Columns\ColumnGroup;
 use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\FileUpload;
+use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Clusters\Employee\Resources\KaryawanResource\Pages;
@@ -32,7 +40,7 @@ class KaryawanResource extends Resource
         return $form
             ->schema([
                 Wizard::make([
-                    Wizard\Step::make('Order')
+                    Wizard\Step::make('Biodata')
                         ->schema([
                             Grid::make()
                             ->schema([
@@ -50,15 +58,126 @@ class KaryawanResource extends Resource
                                 TextInput::make('tempat_lahir'),
                                 DatePicker::make('tanggal_lahir'),
                             ])->columns(3),  
-                                 
+                                Textarea::make('alamat')
+                                ->autosize(),
+                                TextInput::make('nomor_telepon'),
+                                Grid::make()
+                                ->schema([
+                                TextInput::make('nama_pasangan'),
+                                TextInput::make('jumlah_anak')
+                                ->numeric(),
+                                TextInput::make('kontak_darurat'),
+                                ])->columns(3),
+                                
                         ]),
-                    Wizard\Step::make('Delivery')
+                    Wizard\Step::make('Data Tambahan')
                         ->schema([
-                            // ...
+                            Section::make('Data Kerja')
+                            ->description('meluputi jabatan, posisi unit dan tanggal mulai bekerja di Al-Fityan')
+                            ->schema([
+                                Select::make('status_karyawan_id')
+                                ->relationship('statusKaryawan', 'status')
+                                ->searchable()
+                                ->preload(),
+                            Grid::make()
+                            ->schema([
+                                Select::make('posisi_kerja_id')
+                                ->relationship('posisiKerja', 'nama_posisi_kerja')
+                                ->searchable()
+                                ->preload(),
+                                Select::make('jabatan_id')
+                                ->relationship('jabatan', 'nama_jabatan')
+                                ->searchable()
+                                ->preload(),
+                                Select::make('unit_id')
+                                ->relationship('unit', 'nama_unit')
+                                ->searchable()
+                                ->preload(),
+                                DatePicker::make('tanggal_mulai_bekerja'),
+                            ])->columns(4),
+                            ]),
+
+                            Section::make('Data Pendidikan')
+                            ->description('Data pendidikan terakhir, jurusan, Institusi pendidikan dan pelatihan pengembangan diri yang pernah diikuti')
+                            ->schema([
+                                Grid::make()
+                                ->schema([
+                                    Select::make('pendidikan_terakhir_id')
+                                    ->relationship('pendidikanTerakhir','nama_pendidikan_terakhir')
+                                    ->searchable()
+                                    ->preload(),
+                                    Select::make('gelar_pendidikan_id')
+                                    ->relationship('gelarPendidikan','nama_gelar_pendidikan')
+                                    ->searchable()
+                                    ->preload(),
+                                ])->columns(2),
+                            Grid::make()
+                            ->schema([
+                                
+                                TextInput::make('institusi_pendidikan')
+                                ->label('nama Institusi Pendidikan'),
+                                TextInput::make('jurusan'),
+                                TextInput::make('tahun_lulus')
+                                ->numeric(),
+                            ])->columns(3)
+                            ])
+                            
                         ]),
-                    Wizard\Step::make('Billing')
+                    Wizard\Step::make('Dokumen')
+                    ->description('seluruh dokument wajib discan rapi')
                         ->schema([
-                            // ...
+                            Section::make('Dokumen Biodata Diri')
+                            ->schema([
+                                Grid::make()
+                                ->schema([
+                                    FileUpload::make('foto_karyawan')
+                                    ->image()
+                                    ->imageEditor()
+                                    ->directory('fotoKaryawan'),
+                                    FileUpload::make('scan_ktp')
+                                    ->image()
+                                    ->imageEditor()
+                                    ->directory('ktp'),
+                                    FileUpload::make('scan_kk')
+                                    ->image()
+                                    ->imageEditor()
+                                    ->directory('kk'),
+                                ])->columns(3),
+                            ]),
+
+                            Section::make('Dokumen Ijazah & Sertifikat')
+                            ->schema([
+                                Grid::make()
+                                ->schema([
+                                    FileUpload::make('scan_ijazah_terakhir')
+                                    ->image()
+                                    ->imageEditor()
+                                    ->directory('ijazah'),
+                                    FileUpload::make('scan_sertifikat_penghargaan')
+                                    ->image()
+                                    ->imageEditor()
+                                    ->directory('penghargaan'),
+                                    FileUpload::make('sertifikat_prestasi')
+                                    ->image()
+                                    ->imageEditor()
+                                    ->directory('prestasi'),
+                                ])->columns(3),
+                            ]),
+
+                            Section::make('Dokumen SK')
+                            ->schema([
+                                Grid::make()
+                                ->schema([
+                                    FileUpload::make('scan_sk_yayasan')
+                                    ->image()
+                                    ->imageEditor()
+                                    ->directory('sk_yayasan'),
+                                    FileUpload::make('scan_sk_mengajar')
+                                    ->image()
+                                    ->imageEditor()
+                                    ->directory('sk_mengajar'),
+                                ])->columns(2),
+                            ]),
                         ]),
                 ])
                 
@@ -69,7 +188,15 @@ class KaryawanResource extends Resource
     {
         return $table
             ->columns([
-                //
+                TextColumn::make('nama_lengkap')
+                ->description(fn (Karyawan $record): string => $record->npy)
+                ->label('nama')
+                ->sortable(),
+                TextColumn::make('nomor_telepon')
+                ->icon('heroicon-m-phone')
+                ->iconPosition(IconPosition::Before)
+                ->iconColor('primary')
+                ->label('No.HP'),
             ])
             ->filters([
                 //

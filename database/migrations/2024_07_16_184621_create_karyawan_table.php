@@ -21,7 +21,6 @@ return new class extends Migration
             $table->enum('jenis_kelamin', ['Laki-laki', 'Perempuan']);
             $table->text('alamat');
             $table->string('nomor_telepon');
-            $table->string('email');
             $table->unsignedBigInteger('user_id')->nullable();
 
             // Data Pekerjaan
@@ -29,7 +28,7 @@ return new class extends Migration
             $table->unsignedBigInteger('posisi_kerja_id')->nullable();
             $table->unsignedBigInteger('unit_id')->nullable();
             $table->date('tanggal_mulai_bekerja');
-            $table->enum('status_karyawan', ['Tetap', 'Kontrak', 'Honor']);
+            $table->unsignedBigInteger('status_karyawan_id');
 
             // Pendidikan
             $table->unsignedBigInteger('pendidikan_terakhir_id')->nullable();
@@ -67,6 +66,7 @@ return new class extends Migration
             $table->foreign('pendidikan_terakhir_id')->references('id')->on('pendidikan_terakhir')->onDelete('set null');
             $table->foreign('gelar_pendidikan_id')->references('id')->on('gelar_pendidikan')->onDelete('set null');
             $table->foreign('posisi_kerja_id')->references('id')->on('posisi_kerja')->onDelete('set null');
+            $table->foreign('status_karyawan_id')->references('id')->on('status_kepegawaian')->onDelete('set null');
         });
     }
 

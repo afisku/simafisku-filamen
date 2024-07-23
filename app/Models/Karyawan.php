@@ -20,7 +20,6 @@ class Karyawan extends Model
         'jenis_kelamin',
         'alamat',
         'nomor_telepon',
-        'email',
         'user_id',
         'jabatan_id',
         'posisi_kerja_id',
@@ -73,5 +72,10 @@ class Karyawan extends Model
     public function gelarPendidikan()
     {
         return $this->belongsTo(GelarPendidikan::class);
+    }
+
+    public function statusKaryawan()
+    {
+        return $this->belongsTo(StatusKepegawaian::class);
     }
 }
