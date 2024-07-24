@@ -27,6 +27,10 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->login()
+            ->brandName('SIM4FISKU')
+            ->brandLogo(asset('images/logo.png'))
+            ->darkModeBrandLogo(asset('images/logo.png'))
+            ->brandLogoHeight('6rem')
             ->colors([
                 'primary' => Color::Amber,
             ])
