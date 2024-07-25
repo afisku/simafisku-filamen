@@ -29,6 +29,7 @@ class AdminPanelProvider extends PanelProvider
             ->login()
             ->brandName('SIM4FISKU')
             ->brandLogo(asset('images/logo.png'))
+            ->sidebarCollapsibleOnDesktop('true')
             ->darkModeBrandLogo(asset('images/logo.png'))
             ->brandLogoHeight('6rem')
             ->colors([

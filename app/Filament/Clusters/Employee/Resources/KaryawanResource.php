@@ -19,6 +19,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
 use Filament\Support\Enums\IconPosition;
 use Filament\Tables\Columns\ColumnGroup;
+use Filament\Tables\Columns\ImageColumn;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Tables\Filters\SelectFilter;
@@ -131,15 +132,12 @@ class KaryawanResource extends Resource
                                 Grid::make()
                                 ->schema([
                                     FileUpload::make('foto_karyawan')
-                                    ->image()
                                     ->imageEditor()
                                     ->directory('fotoKaryawan'),
                                     FileUpload::make('scan_ktp')
-                                    ->image()
                                     ->imageEditor()
                                     ->directory('ktp'),
                                     FileUpload::make('scan_kk')
-                                    ->image()
                                     ->imageEditor()
                                     ->directory('kk'),
                                 ])->columns(3),
@@ -150,15 +148,12 @@ class KaryawanResource extends Resource
                                 Grid::make()
                                 ->schema([
                                     FileUpload::make('scan_ijazah_terakhir')
-                                    ->image()
                                     ->imageEditor()
                                     ->directory('ijazah'),
                                     FileUpload::make('scan_sertifikat_penghargaan')
-                                    ->image()
                                     ->imageEditor()
                                     ->directory('penghargaan'),
                                     FileUpload::make('sertifikat_prestasi')
-                                    ->image()
                                     ->imageEditor()
                                     ->directory('prestasi'),
                                 ])->columns(3),
@@ -169,11 +164,9 @@ class KaryawanResource extends Resource
                                 Grid::make()
                                 ->schema([
                                     FileUpload::make('scan_sk_yayasan')
-                                    ->image()
                                     ->imageEditor()
                                     ->directory('sk_yayasan'),
                                     FileUpload::make('scan_sk_mengajar')
-                                    ->image()
                                     ->imageEditor()
                                     ->directory('sk_mengajar'),
                                 ])->columns(2),
@@ -197,6 +190,8 @@ class KaryawanResource extends Resource
                 ->iconPosition(IconPosition::Before)
                 ->iconColor('primary')
                 ->label('No.HP'),
+                ImageColumn::make('foto_karyawan')
+                ->circular()
             ])
             ->filters([
                 //
