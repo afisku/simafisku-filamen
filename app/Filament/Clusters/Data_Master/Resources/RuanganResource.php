@@ -35,7 +35,9 @@ class RuanganResource extends Resource
                 FileUpload::make('foto')
                 ->image()
                 ->directory('ruangan')
-                ->imageEditor(),
+                ->imageEditor()
+                ->imageEditorViewportWidth('1920')
+                ->imageEditorViewportHeight('1080'),
             ]);
     }
 

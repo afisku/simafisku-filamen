@@ -28,7 +28,7 @@ return new class extends Migration
             $table->unsignedBigInteger('posisi_kerja_id')->nullable();
             $table->unsignedBigInteger('unit_id')->nullable();
             $table->date('tanggal_mulai_bekerja');
-            $table->unsignedBigInteger('status_karyawan_id');
+            $table->unsignedBigInteger('status_karyawan_id')->nullable();
 
             // Pendidikan
             $table->unsignedBigInteger('pendidikan_terakhir_id')->nullable();

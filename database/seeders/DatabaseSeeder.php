@@ -19,7 +19,7 @@ class DatabaseSeeder extends Seeder
             PosisiKerjaSeeder::class,
             PendidikanTerakhirSeeder::class,
             UnitSeeder::class,
-            GelarPendidikanSeed::class,
+            GelarPendidikanSeeder::class,
         ]);
     }
 }

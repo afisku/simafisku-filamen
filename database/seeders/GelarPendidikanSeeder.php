@@ -4,9 +4,8 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
-class GelarPendidikanSeed extends Seeder
+class GelarPendidikanSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -14,8 +13,6 @@ class GelarPendidikanSeed extends Seeder
     public function run(): void
     {
         DB::table('gelar_pendidikan')->insert([
-            
-        $gelarPendidikan = [
             ['nama_gelar_pendidikan' => 'Sarjana Pendidikan (S.Pd.)'],
             ['nama_gelar_pendidikan' => 'Sarjana Teknik (S.T.)'],
             ['nama_gelar_pendidikan' => 'Sarjana Ekonomi (S.E.)'],
@@ -41,10 +38,6 @@ class GelarPendidikanSeed extends Seeder
             ['nama_gelar_pendidikan' => 'Diploma 2 (D2)'],
             ['nama_gelar_pendidikan' => 'Diploma 3 (D3)'],
             ['nama_gelar_pendidikan' => 'Diploma 4 (D4) / Sarjana Terapan'],
-        ],
-
-        DB::table('gelar_pendidikan')->insert($gelarPendidikan)
-         
         ]);
     }
 }
