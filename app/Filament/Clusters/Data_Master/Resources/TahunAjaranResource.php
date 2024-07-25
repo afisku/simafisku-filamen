@@ -2,24 +2,21 @@
 
 namespace App\Filament\Clusters\Data_Master\Resources;
 
-use stdClass;
-use Filament\Forms;
-use Filament\Tables;
-use Filament\Forms\Form;
-use Filament\Tables\Table;
-use App\Models\GelarPendidikan;
-use Filament\Resources\Resource;
 use App\Filament\Clusters\Data_Master;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Contracts\HasTable;
+use App\Filament\Clusters\Data_Master\Resources\TahunAjaranResource\Pages;
+use App\Filament\Clusters\Data_Master\Resources\TahunAjaranResource\RelationManagers;
+use App\Models\TahunAjaran;
+use Filament\Forms;
+use Filament\Forms\Form;
+use Filament\Resources\Resource;
+use Filament\Tables;
+use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
-use App\Filament\Clusters\Data_Master\Resources\GelarPendidikanResource\Pages;
-use App\Filament\Clusters\Data_Master\Resources\GelarPendidikanResource\RelationManagers;
 
-class GelarPendidikanResource extends Resource
+class TahunAjaranResource extends Resource
 {
-    protected static ?string $model = GelarPendidikan::class;
+    protected static ?string $model = TahunAjaran::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
@@ -29,8 +26,13 @@ class GelarPendidikanResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('nama_gelar_pendidikan')
+                Forms\Components\TextInput::make('ta')
+                    ->required()
                     ->maxLength(255),
+                Forms\Components\DateTimePicker::make('periode_mulai'),
+                Forms\Components\DateTimePicker::make('periode_akhir'),
+                Forms\Components\Toggle::make('status')
+                    ->required(),
             ]);
     }
 
@@ -38,18 +40,17 @@ class GelarPendidikanResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('No.')->state(
-                    static function (HasTable $livewire, stdClass $rowLoop): string {
-                        return (string) (
-                            $rowLoop->iteration +
-                            ($livewire->getTableRecordsPerPage() * (
-                                $livewire->getTablePage() - 1
-                            ))
-                        );
-                    }
-                ),
-                Tables\Columns\TextColumn::make('nama_gelar_pendidikan')
+                Tables\Columns\TextColumn::make('ta')
+                    ->label('Tahun Ajaran')
                     ->searchable(),
+                Tables\Columns\TextColumn::make('periode_mulai')
+                    ->dateTime()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('periode_akhir')
+                    ->dateTime()
+                    ->sortable(),
+                Tables\Columns\IconColumn::make('status')
+                    ->boolean(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -63,7 +64,6 @@ class GelarPendidikanResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
             ])
@@ -77,7 +77,7 @@ class GelarPendidikanResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ManageGelarPendidikans::route('/'),
+            'index' => Pages\ManageTahunAjarans::route('/'),
         ];
     }
 }

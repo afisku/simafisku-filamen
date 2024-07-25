@@ -34,6 +34,8 @@ class KaryawanResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
+    protected static ?string $navigationLabel = 'Data Karyawan';
+
     protected static ?string $cluster = Employee::class;
 
     public static function form(Form $form): Form
@@ -185,13 +187,15 @@ class KaryawanResource extends Resource
                 ->description(fn (Karyawan $record): string => $record->npy)
                 ->label('nama')
                 ->sortable(),
+                TextColumn::make('jabatan.nama_jabatan'),
                 TextColumn::make('nomor_telepon')
                 ->icon('heroicon-m-phone')
                 ->iconPosition(IconPosition::Before)
                 ->iconColor('primary')
                 ->label('No.HP'),
                 ImageColumn::make('foto_karyawan')
-                ->circular()
+                ->label('Profile')
+                ->circular(),
             ])
             ->filters([
                 //
