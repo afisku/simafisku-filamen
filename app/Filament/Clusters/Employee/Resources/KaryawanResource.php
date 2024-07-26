@@ -8,12 +8,14 @@ use App\Models\Karyawan;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
 use Illuminate\Support\Carbon;
+use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
 use App\Filament\Clusters\Employee;
 use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Wizard;
-use Filament\Forms\Components\Section;
+use Filament\Infolists\Components\Section as InfolistSection;
+use Filament\Forms\Components\Section as FormSection;
 use Filament\Forms\Components\Textarea;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
@@ -24,6 +26,7 @@ use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Builder;
+use Filament\Infolists\Components\ImageEntry;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Clusters\Employee\Resources\KaryawanResource\Pages;
 use App\Filament\Clusters\Employee\Resources\KaryawanResource\RelationManagers;
@@ -75,7 +78,7 @@ class KaryawanResource extends Resource
                         ]),
                     Wizard\Step::make('Data Tambahan')
                         ->schema([
-                            Section::make('Data Kerja')
+                            FormSection::make('Data Kerja')
                             ->description('meluputi jabatan, posisi unit dan tanggal mulai bekerja di Al-Fityan')
                             ->schema([
                                 Select::make('status_karyawan_id')
@@ -100,7 +103,7 @@ class KaryawanResource extends Resource
                             ])->columns(4),
                             ]),
 
-                            Section::make('Data Pendidikan')
+                            FormSection::make('Data Pendidikan')
                             ->description('Data pendidikan terakhir, jurusan, Institusi pendidikan dan pelatihan pengembangan diri yang pernah diikuti')
                             ->schema([
                                 Grid::make()
@@ -129,7 +132,7 @@ class KaryawanResource extends Resource
                     Wizard\Step::make('Dokumen')
                     ->description('seluruh dokument wajib discan rapi')
                         ->schema([
-                            Section::make('Dokumen Biodata Diri')
+                            FormSection::make('Dokumen Biodata Diri')
                             ->schema([
                                 Grid::make()
                                 ->schema([
@@ -145,7 +148,7 @@ class KaryawanResource extends Resource
                                 ])->columns(3),
                             ]),
 
-                            Section::make('Dokumen Ijazah & Sertifikat')
+                            FormSection::make('Dokumen Ijazah & Sertifikat')
                             ->schema([
                                 Grid::make()
                                 ->schema([
@@ -161,7 +164,7 @@ class KaryawanResource extends Resource
                                 ])->columns(3),
                             ]),
 
-                            Section::make('Dokumen SK')
+                            FormSection::make('Dokumen SK')
                             ->schema([
                                 Grid::make()
                                 ->schema([
@@ -201,8 +204,8 @@ class KaryawanResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
                 Tables\Actions\ViewAction::make(),
+                Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -224,6 +227,23 @@ class KaryawanResource extends Resource
             'index' => Pages\ListKaryawans::route('/'),
             'create' => Pages\CreateKaryawan::route('/create'),
             'edit' => Pages\EditKaryawan::route('/{record}/edit'),
+            'view' => Pages\ViewKaryawan::route('/{record}/view'),
         ];
     }
+
+    public static function infolist(Infolist $infolist): Infolist
+{
+    return $infolist
+        ->schema([
+            InfolistSection::make('Rate limiting')
+        ->description('Prevent abuse by limiting the number of requests per period')
+        ->aside()
+        ->schema([
+            ImageEntry::make('foto_karyawan')
+            ->height(60)
+            ->circular()
+        ])
+            
+        ]);
+}
 }
