@@ -235,15 +235,12 @@ class KaryawanResource extends Resource
 {
     return $infolist
         ->schema([
-            InfolistSection::make('Rate limiting')
-        ->description('Prevent abuse by limiting the number of requests per period')
-        ->aside()
+            InfolistSection::make()
         ->schema([
             ImageEntry::make('foto_karyawan')
             ->height(60)
-            ->circular()
+            ->circular(),
         ])
-            
         ]);
 }
 }
