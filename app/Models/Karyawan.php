@@ -46,36 +46,46 @@ class Karyawan extends Model
 
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id');
     }
 
-    public function jabatan()
+    public function jabatanPegawai()
     {
-        return $this->belongsTo(Jabatan::class);
+        return $this->belongsTo(Jabatan::class, 'jabatan_id');
     }
 
     public function posisiKerja()
     {
-        return $this->belongsTo(PosisiKerja::class);
+        return $this->belongsTo(PosisiKerja::class, 'posisi_kerja_id');
     }
 
-    public function unit()
+    public function unitKerja()
     {
-        return $this->belongsTo(Unit::class);
+        return $this->belongsTo(Unit::class, 'unit_id');
     }
 
     public function pendidikanTerakhir()
     {
-        return $this->belongsTo(PendidikanTerakhir::class);
+        return $this->belongsTo(PendidikanTerakhir::class, 'pendidikan_terakhir_id');
     }
 
     public function gelarPendidikan()
     {
-        return $this->belongsTo(GelarPendidikan::class);
+        return $this->belongsTo(GelarPendidikan::class, 'gelar_pendidikan_id');
     }
 
     public function statusKaryawan()
     {
-        return $this->belongsTo(StatusKepegawaian::class);
+        return $this->belongsTo(StatusKepegawaian::class, 'status_karyawan_id');
     }
+
+    public function getTempatTanggalLahirAttribute()
+    {
+        return $this->tempat_lahir . ', ' . \Carbon\Carbon::parse($this->tanggal_lahir)->translatedFormat('d F Y');
+    }
+
+    public function getJenisKelaminFullAttribute()
+{
+    return $this->jenis_kelamin === 'L' ? 'Laki-laki' : 'Perempuan';
+}
 }

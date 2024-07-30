@@ -2,20 +2,19 @@
 
 namespace App\Filament\Clusters\Employee\Resources;
 
-use Filament\Forms;
+use filament;
 use Filament\Tables;
 use App\Models\Karyawan;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
-use Illuminate\Support\Carbon;
 use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
 use App\Filament\Clusters\Employee;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Wizard;
 use Filament\Forms\Components\Textarea;
-use Filament\Infolists\Components\Grid;
 use Filament\Tables\Columns\TextColumn;
+use Illuminate\Support\Facades\Storage;
 use Filament\Forms\Components\TextInput;
 use Filament\Infolists\Components\Group;
 use Filament\Infolists\Components\Split;
@@ -28,11 +27,12 @@ use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Components\ImageEntry;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Filament\Forms\Components\Grid as FormGrid;
 use Filament\Forms\Components\Section as FormSection;
+use Filament\Infolists\Components\Grid as InfolistsGrid;
 use Filament\Infolists\Components\Section as InfolistSection;
 use App\Filament\Clusters\Employee\Resources\KaryawanResource\Pages;
-use App\Filament\Clusters\Employee\Resources\KaryawanResource\RelationManagers;
+
 
 class KaryawanResource extends Resource
 {
@@ -51,13 +51,13 @@ class KaryawanResource extends Resource
                 Wizard::make([
                     Wizard\Step::make('Biodata')
                         ->schema([
-                            Grid::make()
+                            FormGrid::make()
                             ->schema([
                                 TextInput::make('npy'),
                                 TextInput::make('nik'),
                                 TextInput::make('nama_lengkap'),
                             ])->columns(3),
-                            Grid::make()
+                            FormGrid::make()
                             ->schema([
                                 Select::make('jenis_kelamin')
                                 ->options([
@@ -70,7 +70,7 @@ class KaryawanResource extends Resource
                                 Textarea::make('alamat')
                                 ->autosize(),
                                 TextInput::make('nomor_telepon'),
-                                Grid::make()
+                                FormGrid::make()
                                 ->schema([
                                 TextInput::make('nama_pasangan'),
                                 TextInput::make('jumlah_anak')
@@ -88,18 +88,18 @@ class KaryawanResource extends Resource
                                 ->relationship('statusKaryawan', 'status')
                                 ->searchable()
                                 ->preload(),
-                            Grid::make()
+                            FormGrid::make()
                             ->schema([
                                 Select::make('posisi_kerja_id')
                                 ->relationship('posisiKerja', 'nama_posisi_kerja')
                                 ->searchable()
                                 ->preload(),
                                 Select::make('jabatan_id')
-                                ->relationship('jabatan', 'nama_jabatan')
+                                ->relationship('jabatanPegawai', 'nama_jabatan')
                                 ->searchable()
                                 ->preload(),
                                 Select::make('unit_id')
-                                ->relationship('unit', 'nama_unit')
+                                ->relationship('unitKerja', 'nama_unit')
                                 ->searchable()
                                 ->preload(),
                                 DatePicker::make('tanggal_mulai_bekerja'),
@@ -109,7 +109,7 @@ class KaryawanResource extends Resource
                             FormSection::make('Data Pendidikan')
                             ->description('Data pendidikan terakhir, jurusan, Institusi pendidikan dan pelatihan pengembangan diri yang pernah diikuti')
                             ->schema([
-                                Grid::make()
+                                FormGrid::make()
                                 ->schema([
                                     Select::make('pendidikan_terakhir_id')
                                     ->relationship('pendidikanTerakhir','nama_pendidikan_terakhir')
@@ -120,7 +120,7 @@ class KaryawanResource extends Resource
                                     ->searchable()
                                     ->preload(),
                                 ])->columns(2),
-                            Grid::make()
+                            FormGrid::make()
                             ->schema([
                                 
                                 TextInput::make('institusi_pendidikan')
@@ -137,7 +137,7 @@ class KaryawanResource extends Resource
                         ->schema([
                             FormSection::make('Dokumen Biodata Diri')
                             ->schema([
-                                Grid::make()
+                                FormGrid::make()
                                 ->schema([
                                     FileUpload::make('foto_karyawan')
                                     ->imageEditor()
@@ -153,7 +153,7 @@ class KaryawanResource extends Resource
 
                             FormSection::make('Dokumen Ijazah & Sertifikat')
                             ->schema([
-                                Grid::make()
+                                FormGrid::make()
                                 ->schema([
                                     FileUpload::make('scan_ijazah_terakhir')
                                     ->imageEditor()
@@ -169,7 +169,7 @@ class KaryawanResource extends Resource
 
                             FormSection::make('Dokumen SK')
                             ->schema([
-                                Grid::make()
+                                FormGrid::make()
                                 ->schema([
                                     FileUpload::make('scan_sk_yayasan')
                                     ->imageEditor()
@@ -193,7 +193,7 @@ class KaryawanResource extends Resource
                 ->description(fn (Karyawan $record): string => $record->npy)
                 ->label('nama')
                 ->sortable(),
-                TextColumn::make('jabatan.nama_jabatan'),
+                TextColumn::make('jabatanPegawai.nama_jabatan'),
                 TextColumn::make('nomor_telepon')
                 ->icon('heroicon-m-phone')
                 ->iconPosition(IconPosition::Before)
@@ -244,23 +244,70 @@ class KaryawanResource extends Resource
             
             InfolistSection::make()
             ->schema([
-                Split::make([
-                    Grid::make(2)
-                    ->schema([
-                        Group::make([
-                        
-                                        TextEntry::make('npy'),
-                                        TextEntry::make('nama_lengkap'),
-                                        TextEntry::make('created_at')
-                                            ->badge()
-                                            ->date()
-                                            ->color('success'),
-                    
-                        ])
-                        ])
-
-                    ])
-                ])
-        ]);
+                        Split::make([
+                            InfolistsGrid::make(2)
+                                    ->schema([
+                                        Group::make([
+                                
+                                                TextEntry::make('npy'),
+                                                TextEntry::make('nama_lengkap'),
+                                                TextEntry::make('tempat_tanggal_lahir')
+                                                    ->label('Tempat, Tanggal Lahir'),
+                                                TextEntry::make('jenis_kelamin_full')
+                                                    ->label('Jenis Kelamin'),
+                                                TextEntry::make('alamat')
+                                                    ->label('Alamat Tinggal'),
+                                                TextEntry::make('nomor_telepon'),
+                                                TextEntry::make('created_at')
+                                                    ->badge()
+                                                    ->date('d F Y')
+                                                    ->color('success'),
+                            
+                                        ]),
+                                        Group::make([
+                                                    TextEntry::make('nik'),
+                                                    TextEntry::make('posisiKerja.nama_posisi_kerja')
+                                                    ->label('Bagian'),
+                                                    TextEntry::make('jabatanPegawai.nama_jabatan')
+                                                    ->label('Jabatan'),
+                                                    TextEntry::make('unitKerja.nama_unit')
+                                                    ->label('Unit'),
+                                                    TextEntry::make('statusKaryawan.status')
+                                                    ->label('Status Pegawai'),
+                                                    TextEntry::make('tanggal_mulai_bekerja')
+                                                    ->dateTime('d F Y')
+                                                    ->label('Mulai kerja'),
+                                                   ]),
+                                    ]),
+                                        ImageEntry::make('foto_karyawan')
+                                            ->hiddenLabel()
+                                            ->grow(false)
+                                            ->circular(),
+                                ])->from('lg'),
+                                ]),
+                                InfolistSection::make('Data Pendidikan')
+                                            ->schema([
+                                                Split::make([
+                                                    InfolistsGrid::make(3)
+                                                    ->schema([
+                                                        Group::make([
+                                                            TextEntry::make('pendidikanTerakhir.nama_pendidikan_terakhir'),
+                                                            TextEntry::make('gelarPendidikan.nama_gelar_pendidikan'),
+                                                            TextEntry::make('jurusan'),
+                                                        ]),
+                                                        Group::make([
+                                                            TextEntry::make('institusi_pendidikan'),
+                                                            TextEntry::make('tahun_lulus'),
+                                                        ]),
+                                                        Group::make([
+                                                            ImageEntry::make('scan_ktp')
+                                                            ->defaultImageUrl(url('/images/placeholder.png'))
+                                                        ]),
+                                                    ])
+                                                ])                                     
+                                        
+                                ])->collapsible(),
+                                
+                    ]);
 }
 }

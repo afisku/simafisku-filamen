@@ -16,9 +16,9 @@ return new class extends Migration
             $table->string('npy')->unique();
             $table->string('nama_lengkap');
             $table->string('nik')->unique();
-            $table->string('tempat_lahir');
-            $table->date('tanggal_lahir');
-            $table->enum('jenis_kelamin', ['Laki-laki', 'Perempuan']);
+            $table->string('tempat_lahir')->nullable();
+            $table->date('tanggal_lahir')->nullable();
+            $table->enum('jenis_kelamin', ['L', 'P'])->nullable();
             $table->text('alamat');
             $table->string('nomor_telepon');
             $table->unsignedBigInteger('user_id')->nullable();
