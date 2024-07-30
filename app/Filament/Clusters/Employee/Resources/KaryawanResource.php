@@ -11,14 +11,14 @@ use Illuminate\Support\Carbon;
 use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
 use App\Filament\Clusters\Employee;
-use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Wizard;
-use Filament\Infolists\Components\Section as InfolistSection;
-use Filament\Forms\Components\Section as FormSection;
 use Filament\Forms\Components\Textarea;
+use Filament\Infolists\Components\Grid;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
+use Filament\Infolists\Components\Group;
+use Filament\Infolists\Components\Split;
 use Filament\Support\Enums\IconPosition;
 use Filament\Tables\Columns\ColumnGroup;
 use Filament\Tables\Columns\ImageColumn;
@@ -26,8 +26,11 @@ use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Builder;
+use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Components\ImageEntry;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Filament\Forms\Components\Section as FormSection;
+use Filament\Infolists\Components\Section as InfolistSection;
 use App\Filament\Clusters\Employee\Resources\KaryawanResource\Pages;
 use App\Filament\Clusters\Employee\Resources\KaryawanResource\RelationManagers;
 
@@ -234,13 +237,30 @@ class KaryawanResource extends Resource
     public static function infolist(Infolist $infolist): Infolist
 {
     return $infolist
-        ->schema([
+        ->schema([           
+            // ImageEntry::make('foto_karyawan')
+            // ->height(60)
+            // ->circular(),
+            
             InfolistSection::make()
-        ->schema([
-            ImageEntry::make('foto_karyawan')
-            ->height(60)
-            ->circular(),
-        ])
+            ->schema([
+                Split::make([
+                    Grid::make(2)
+                    ->schema([
+                        Group::make([
+                        
+                                        TextEntry::make('npy'),
+                                        TextEntry::make('nama_lengkap'),
+                                        TextEntry::make('created_at')
+                                            ->badge()
+                                            ->date()
+                                            ->color('success'),
+                    
+                        ])
+                        ])
+
+                    ])
+                ])
         ]);
 }
 }

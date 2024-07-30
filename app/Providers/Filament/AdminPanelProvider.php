@@ -18,6 +18,9 @@ use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Althinect\FilamentSpatieRolesPermissions\FilamentSpatieRolesPermissionsPlugin;
+use App\Filament\Clusters\Data_Master\Resources\TahunAjaranResource;
+use Filament\Facades\Filament;
+use Filament\Navigation\UserMenuItem;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -68,5 +71,17 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->viteTheme('resources/css/filament/admin/theme.css')
             ->plugin(FilamentSpatieRolesPermissionsPlugin::make());
+    }
+    public function boot():void
+    {
+        Filament::serving(function () {
+            Filament::registerUserMenuItems([
+                UserMenuItem::make()
+                ->label('Settings')
+                ->url(TahunAjaranResource::getUrl())
+                ->icon('heroicon-s-cog'),
+                // ..
+            ]);
+        });
     }
 }
