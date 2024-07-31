@@ -70,7 +70,10 @@ class AdminPanelProvider extends PanelProvider
                 Authenticate::class,
             ])
             ->viteTheme('resources/css/filament/admin/theme.css')
-            ->plugin(FilamentSpatieRolesPermissionsPlugin::make());
+            ->plugin(
+                \BezhanSalleh\FilamentShield\FilamentShieldPlugin::make()
+                // FilamentSpatieRolesPermissionsPlugin::make()
+            );
     }
     public function boot():void
     {
