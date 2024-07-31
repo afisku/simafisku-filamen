@@ -41,6 +41,8 @@ class KaryawanResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     protected static ?string $navigationLabel = 'Data Karyawan';
+    
+    protected static ?string $modelLabel = 'Data Karyawan';
 
     protected static ?string $cluster = Employee::class;
 
