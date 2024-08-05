@@ -20,7 +20,7 @@ use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Althinect\FilamentSpatieRolesPermissions\FilamentSpatieRolesPermissionsPlugin;
 use App\Filament\Clusters\Data_Master\Resources\TahunAjaranResource;
 use Filament\Facades\Filament;
-use Filament\Navigation\UserMenuItem;
+use Filament\Navigation\MenuItem;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -79,7 +79,11 @@ class AdminPanelProvider extends PanelProvider
     {
         Filament::serving(function () {
             Filament::registerUserMenuItems([
-                UserMenuItem::make()
+                MenuItem::make()
+                    ->label('Profil')
+                    ->url(fn (): string => route('filament.admin.pages.profil'))
+                    ->icon('heroicon-o-user'),
+                MenuItem::make()
                 ->label('Settings')
                 ->url(TahunAjaranResource::getUrl())
                 ->icon('heroicon-s-cog'),

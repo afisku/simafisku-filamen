@@ -8,7 +8,7 @@ return [
         'navigation_badge' => true,
         'navigation_group' => true,
         'is_globally_searchable' => false,
-        'show_model_path' => true,
+        'show_model_path' => false,
         'is_scoped_to_tenant' => true,
         'cluster' => null,
     ],
@@ -35,14 +35,14 @@ return [
             'view_any',
             'create',
             'update',
-            'restore',
-            'restore_any',
-            'replicate',
-            'reorder',
+            // 'restore',
+            // 'restore_any',
+            // 'replicate',
+            // 'reorder',
             'delete',
             'delete_any',
-            'force_delete',
-            'force_delete_any',
+            // 'force_delete',
+            // 'force_delete_any',
         ],
 
         'page' => 'page',
@@ -83,7 +83,7 @@ return [
     ],
 
     'register_role_policy' => [
-        'enabled' => false,
+        'enabled' => true,
     ],
 
 ];

@@ -190,6 +190,11 @@ class KaryawanResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            // ->modifyQueryUsing(function (Builder $query) { 
+            //     if (auth()->user()->hasRole('guru')) { 
+            //         return $query->where('jabatan_id', 5); 
+            //     } 
+            // })
             ->columns([
                 TextColumn::make('nama_lengkap')
                 ->description(fn (Karyawan $record): string => $record->npy)
