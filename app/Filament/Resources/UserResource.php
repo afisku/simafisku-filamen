@@ -38,11 +38,12 @@ class UserResource extends Resource
                     ->relationship('roles', 'name')
                     ->preload()
                     ->searchable(),
-                Forms\Components\DateTimePicker::make('email_verified_at'),
+                Forms\Components\DatePicker::make('email_verified_at'),
                 Forms\Components\TextInput::make('password')
                     ->password()
-                    ->required()
-                    ->maxLength(255),
+                    ->maxLength(255)
+                    ->dehydrated(fn ($state) => filled($state))
+                    ->required(fn (string $context): bool => $context === 'create'),
             ]);
     }
 
@@ -55,8 +56,7 @@ class UserResource extends Resource
                 Tables\Columns\TextColumn::make('email')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('email_verified_at')
-                    ->dateTime()
-                    ->sortable(),
+                    ->dateTime(),
                 Tables\Columns\TextColumn::make('roles.name')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')

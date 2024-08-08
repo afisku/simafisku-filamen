@@ -2,13 +2,15 @@
 
 namespace App\Filament\Pages;
 
-use Filament\Forms\Concerns\InteractsWithForms;
-use Filament\Forms\Contracts\HasForms;
-use Filament\Actions;
 use Filament\Forms;
+use Filament\Actions;
 use Filament\Forms\Form;
 use Filament\Pages\Page;
+use Filament\Forms\Components\Section;
+use Filament\Forms\Contracts\HasForms;
+use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
+use Filament\Forms\Concerns\InteractsWithForms;
 
 class Profil extends Page implements HasForms
 {
@@ -33,13 +35,22 @@ class Profil extends Page implements HasForms
 {
     return $form
         ->schema([
-            Forms\Components\TextInput::make('name')
+            Section::make('User')
+            ->description('Prevent abuse by limiting the number of requests per period')
+            ->schema([
+                TextInput::make('name')
                 ->autofocus()
                 ->required(),
-            Forms\Components\TextInput::make('email')
+                TextInput::make('email')
                 ->required(),
-        ])->columns(2)
-        ->statePath('data')
+                TextInput::make('password')
+                ->password()
+                ->maxLength(255)
+                ->dehydrated(fn ($state) => filled($state))
+                ->required(fn (string $context): bool => $context === 'create'),
+            ])->columns(2)
+            ])
+            ->statePath('data')
         ->model(auth()->user());
     }
 

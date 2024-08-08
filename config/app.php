@@ -168,11 +168,7 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\Filament\AdminPanelProvider::class,
-<<<<<<< HEAD
-        App\Providers\Filament\StaffPanelProvider::class,
-=======
         App\Providers\Filament\GuruPanelProvider::class,
->>>>>>> 129341bba012d3cd01e586ff28f19cbeecd28b28
         App\Providers\RouteServiceProvider::class,
     ])->toArray(),
 
