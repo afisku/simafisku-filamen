@@ -63,7 +63,7 @@ class RuanganPolicy
      */
     public function forceDelete(User $user, Ruangan $ruangan): bool
     {
-        return $user->can('force_delete_ruangan');
+        return $user->can('{{ ForceDelete }}');
     }
 
     /**
@@ -71,7 +71,7 @@ class RuanganPolicy
      */
     public function forceDeleteAny(User $user): bool
     {
-        return $user->can('force_delete_any_ruangan');
+        return $user->can('{{ ForceDeleteAny }}');
     }
 
     /**
@@ -79,7 +79,7 @@ class RuanganPolicy
      */
     public function restore(User $user, Ruangan $ruangan): bool
     {
-        return $user->can('restore_ruangan');
+        return $user->can('{{ Restore }}');
     }
 
     /**
@@ -87,7 +87,7 @@ class RuanganPolicy
      */
     public function restoreAny(User $user): bool
     {
-        return $user->can('restore_any_ruangan');
+        return $user->can('{{ RestoreAny }}');
     }
 
     /**
@@ -95,7 +95,7 @@ class RuanganPolicy
      */
     public function replicate(User $user, Ruangan $ruangan): bool
     {
-        return $user->can('replicate_ruangan');
+        return $user->can('{{ Replicate }}');
     }
 
     /**
@@ -103,6 +103,6 @@ class RuanganPolicy
      */
     public function reorder(User $user): bool
     {
-        return $user->can('reorder_ruangan');
+        return $user->can('{{ Reorder }}');
     }
 }

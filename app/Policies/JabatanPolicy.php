@@ -63,7 +63,7 @@ class JabatanPolicy
      */
     public function forceDelete(User $user, Jabatan $jabatan): bool
     {
-        return $user->can('force_delete_jabatan');
+        return $user->can('{{ ForceDelete }}');
     }
 
     /**
@@ -71,7 +71,7 @@ class JabatanPolicy
      */
     public function forceDeleteAny(User $user): bool
     {
-        return $user->can('force_delete_any_jabatan');
+        return $user->can('{{ ForceDeleteAny }}');
     }
 
     /**
@@ -79,7 +79,7 @@ class JabatanPolicy
      */
     public function restore(User $user, Jabatan $jabatan): bool
     {
-        return $user->can('restore_jabatan');
+        return $user->can('{{ Restore }}');
     }
 
     /**
@@ -87,7 +87,7 @@ class JabatanPolicy
      */
     public function restoreAny(User $user): bool
     {
-        return $user->can('restore_any_jabatan');
+        return $user->can('{{ RestoreAny }}');
     }
 
     /**
@@ -95,7 +95,7 @@ class JabatanPolicy
      */
     public function replicate(User $user, Jabatan $jabatan): bool
     {
-        return $user->can('replicate_jabatan');
+        return $user->can('{{ Replicate }}');
     }
 
     /**
@@ -103,6 +103,6 @@ class JabatanPolicy
      */
     public function reorder(User $user): bool
     {
-        return $user->can('reorder_jabatan');
+        return $user->can('{{ Reorder }}');
     }
 }

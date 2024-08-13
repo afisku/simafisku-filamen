@@ -63,7 +63,7 @@ class StatusKepegawaianPolicy
      */
     public function forceDelete(User $user, StatusKepegawaian $statusKepegawaian): bool
     {
-        return $user->can('force_delete_status::kepegawaian');
+        return $user->can('{{ ForceDelete }}');
     }
 
     /**
@@ -71,7 +71,7 @@ class StatusKepegawaianPolicy
      */
     public function forceDeleteAny(User $user): bool
     {
-        return $user->can('force_delete_any_status::kepegawaian');
+        return $user->can('{{ ForceDeleteAny }}');
     }
 
     /**
@@ -79,7 +79,7 @@ class StatusKepegawaianPolicy
      */
     public function restore(User $user, StatusKepegawaian $statusKepegawaian): bool
     {
-        return $user->can('restore_status::kepegawaian');
+        return $user->can('{{ Restore }}');
     }
 
     /**
@@ -87,7 +87,7 @@ class StatusKepegawaianPolicy
      */
     public function restoreAny(User $user): bool
     {
-        return $user->can('restore_any_status::kepegawaian');
+        return $user->can('{{ RestoreAny }}');
     }
 
     /**
@@ -95,7 +95,7 @@ class StatusKepegawaianPolicy
      */
     public function replicate(User $user, StatusKepegawaian $statusKepegawaian): bool
     {
-        return $user->can('replicate_status::kepegawaian');
+        return $user->can('{{ Replicate }}');
     }
 
     /**
@@ -103,6 +103,6 @@ class StatusKepegawaianPolicy
      */
     public function reorder(User $user): bool
     {
-        return $user->can('reorder_status::kepegawaian');
+        return $user->can('{{ Reorder }}');
     }
 }

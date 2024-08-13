@@ -63,7 +63,7 @@ class KaryawanPolicy
      */
     public function forceDelete(User $user, Karyawan $karyawan): bool
     {
-        return $user->can('force_delete_karyawan');
+        return $user->can('{{ ForceDelete }}');
     }
 
     /**
@@ -71,7 +71,7 @@ class KaryawanPolicy
      */
     public function forceDeleteAny(User $user): bool
     {
-        return $user->can('force_delete_any_karyawan');
+        return $user->can('{{ ForceDeleteAny }}');
     }
 
     /**
@@ -79,7 +79,7 @@ class KaryawanPolicy
      */
     public function restore(User $user, Karyawan $karyawan): bool
     {
-        return $user->can('restore_karyawan');
+        return $user->can('{{ Restore }}');
     }
 
     /**
@@ -87,7 +87,7 @@ class KaryawanPolicy
      */
     public function restoreAny(User $user): bool
     {
-        return $user->can('restore_any_karyawan');
+        return $user->can('{{ RestoreAny }}');
     }
 
     /**
@@ -95,7 +95,7 @@ class KaryawanPolicy
      */
     public function replicate(User $user, Karyawan $karyawan): bool
     {
-        return $user->can('replicate_karyawan');
+        return $user->can('{{ Replicate }}');
     }
 
     /**
@@ -103,6 +103,6 @@ class KaryawanPolicy
      */
     public function reorder(User $user): bool
     {
-        return $user->can('reorder_karyawan');
+        return $user->can('{{ Reorder }}');
     }
 }

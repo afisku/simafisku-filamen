@@ -63,7 +63,7 @@ class PendidikanTerakhirPolicy
      */
     public function forceDelete(User $user, PendidikanTerakhir $pendidikanTerakhir): bool
     {
-        return $user->can('force_delete_pendidikan::terakhir');
+        return $user->can('{{ ForceDelete }}');
     }
 
     /**
@@ -71,7 +71,7 @@ class PendidikanTerakhirPolicy
      */
     public function forceDeleteAny(User $user): bool
     {
-        return $user->can('force_delete_any_pendidikan::terakhir');
+        return $user->can('{{ ForceDeleteAny }}');
     }
 
     /**
@@ -79,7 +79,7 @@ class PendidikanTerakhirPolicy
      */
     public function restore(User $user, PendidikanTerakhir $pendidikanTerakhir): bool
     {
-        return $user->can('restore_pendidikan::terakhir');
+        return $user->can('{{ Restore }}');
     }
 
     /**
@@ -87,7 +87,7 @@ class PendidikanTerakhirPolicy
      */
     public function restoreAny(User $user): bool
     {
-        return $user->can('restore_any_pendidikan::terakhir');
+        return $user->can('{{ RestoreAny }}');
     }
 
     /**
@@ -95,7 +95,7 @@ class PendidikanTerakhirPolicy
      */
     public function replicate(User $user, PendidikanTerakhir $pendidikanTerakhir): bool
     {
-        return $user->can('replicate_pendidikan::terakhir');
+        return $user->can('{{ Replicate }}');
     }
 
     /**
@@ -103,6 +103,6 @@ class PendidikanTerakhirPolicy
      */
     public function reorder(User $user): bool
     {
-        return $user->can('reorder_pendidikan::terakhir');
+        return $user->can('{{ Reorder }}');
     }
 }
