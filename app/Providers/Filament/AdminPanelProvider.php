@@ -35,7 +35,7 @@ class AdminPanelProvider extends PanelProvider
             ->brandLogo(asset('images/logo.png'))
             ->sidebarCollapsibleOnDesktop('true')
             ->darkModeBrandLogo(asset('images/logo.png'))
-            ->brandLogoHeight('6rem')
+            ->brandLogoHeight(fn () => request()->route()->getName() == 'filament.admin.auth.login' ? '6rem' : '3rem')
             ->colors([
                 'danger' => Color::Rose,
                 'gray' => Color::Gray,
