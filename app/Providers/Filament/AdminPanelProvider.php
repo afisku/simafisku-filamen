@@ -73,22 +73,16 @@ class AdminPanelProvider extends PanelProvider
             ->plugin(
                 \BezhanSalleh\FilamentShield\FilamentShieldPlugin::make()
                 // FilamentSpatieRolesPermissionsPlugin::make()
-            );
-    }
-    public function boot():void
-    {
-        Filament::serving(function () {
-            Filament::registerUserMenuItems([
+            )
+            ->userMenuItems([
                 MenuItem::make()
                     ->label('Profil')
                     ->url(fn (): string => route('filament.admin.pages.profil'))
                     ->icon('heroicon-o-user'),
                 MenuItem::make()
-                ->label('Settings')
-                ->url(TahunAjaranResource::getUrl())
-                ->icon('heroicon-s-cog'),
-                // ..
+                ->label('Pengaturan')
+                ->url('')
+                ->icon('heroicon-o-cog'),
             ]);
-        });
     }
 }
