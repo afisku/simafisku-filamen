@@ -15,6 +15,7 @@ use Filament\Pages\Page;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Notifications\Notification;
 use Filament\Forms\Concerns\InteractsWithForms;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\HtmlString;
 
 class Profil extends Page implements HasForms
@@ -29,11 +30,15 @@ class Profil extends Page implements HasForms
 
     public ?array $data = [];
 
+    // ketika halaman pertama kali muncul
     public function mount(): void
     {
-        // $this->form->fill([
-        //     'name'  => auth()->user()?->name,
-        // ]);
+        $this->form->fill([
+            'name'  => auth()->user()->name,
+            'email'  => auth()->user()->email,
+            'npy'  => auth()->user()?->karyawan?->npy,
+            'nama_lengkap'  => auth()->user()?->karyawan?->nama_lengkap,
+        ]);
     }
 
     public function form(Form $form): Form
@@ -45,11 +50,13 @@ class Profil extends Page implements HasForms
                     ->columns(2)
                     ->schema([
                         Forms\Components\TextInput::make('name')
-                            ->label('Nama Lengkap')
+                            ->label('Nama Pengguna')
+                            ->placeholder('Nama Pengguna')
                             ->autofocus()
                             ->required(),
                         Forms\Components\TextInput::make('email')
                             ->label('Email')
+                            ->placeholder('Email')
                             ->required(),
                         Forms\Components\TextInput::make('password')
                             ->label('Password')
@@ -88,7 +95,8 @@ class Profil extends Page implements HasForms
                                         ]),
                                     Forms\Components\TextInput::make('nama_lengkap')
                                         ->label('Nama Lengkap')
-                                        ->placeholder('Nama Lengkap'),
+                                        ->placeholder('Nama Lengkap')
+                                        ->required(),
                                     Forms\Components\Select::make('jenis_kelamin')
                                         ->label('Jenis Kelamin')
                                         ->native(false)
@@ -263,7 +271,7 @@ class Profil extends Page implements HasForms
     protected function getFormActions(): array
     {
         return [
-            Actions\Action::make('Update')
+            Actions\Action::make('Ubah')
                 ->color('primary')
                 ->submit('update'),
         ];
@@ -271,13 +279,42 @@ class Profil extends Page implements HasForms
 
     public function update()
     {
-        auth()->user()->update(
-            $this->form->getState()
-        );
+        // dd($this->form->getState());
+        $data = $this->form->getState();
+
+        // Simpan data pengguna
+        $user = [
+            'name' => $data['name'],
+            'email' => $data['email'],
+        ];
+        // jika password diisi
+        if ($data['password']) {
+            $user['password'] = $data['password'];
+        }
+        auth()->user()->update($user);
+
+
+
+        // Simpan data karyawan
+        $karyawan = [
+            'npy' => $data['npy'],
+            'nik' => $data['nik'],
+            'nama_lengkap' => $data['nama_lengkap'],
+            'alamat' => $data['alamat'],
+            'nomor_telepon' => $data['nomor_telepon'],
+            'tanggal_mulai_bekerja' => $data['tanggal_mulai_bekerja'],
+        ];
+
+        auth()->user()->karyawan()->updateOrCreate([
+            'user_id' => auth()->user()->id
+        ], $karyawan);
+        
 
         Notification::make()
             ->title('Profil berhasil diubah!')
             ->success()
             ->send();
+
+        redirect()->route('filament.admin.pages.profil');
     }
 }
