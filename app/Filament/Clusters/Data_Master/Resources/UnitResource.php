@@ -10,9 +10,11 @@ use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use stdClass;
 
 class UnitResource extends Resource
 {
@@ -21,6 +23,12 @@ class UnitResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     protected static ?string $cluster = Data_Master::class;
+
+    protected static ?string $navigationLabel = 'Unit';
+
+    protected static ?string $slug = 'unit';
+
+    protected static ?string $title = 'Unit ';
 
     public static function form(Form $form): Form
     {
@@ -37,6 +45,19 @@ class UnitResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\TextColumn::make('No')->state(
+                    static function (HasTable $livewire, stdClass $rowLoop): string {
+                        return (string) (
+                            $rowLoop->iteration +
+                            (intval($livewire->getTableRecordsPerPage()) * (
+                                intval($livewire->getTablePage()) - 1
+                            ))
+                        );
+                    }
+                )->extraHeaderAttributes([
+                    'class' => 'w-8'
+                ])
+                ->alignCenter(),
                 Tables\Columns\TextColumn::make('kode_unit')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('nama_unit')
