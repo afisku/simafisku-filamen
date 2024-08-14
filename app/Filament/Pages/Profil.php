@@ -33,11 +33,13 @@ class Profil extends Page implements HasForms
     // ketika halaman pertama kali muncul
     public function mount(): void
     {
+        // isi form dengan data
         $this->form->fill([
             'name'  => auth()->user()->name,
             'email'  => auth()->user()->email,
             'npy'  => auth()->user()?->karyawan?->npy,
             'nama_lengkap'  => auth()->user()?->karyawan?->nama_lengkap,
+            'scan_ktp'  => url('storage/' . auth()->user()?->karyawan?->scan_ktp),
         ]);
     }
 
@@ -224,6 +226,8 @@ class Profil extends Page implements HasForms
                                             Forms\Components\FileUpload::make('scan_ktp')
                                                 ->label('KTP')
                                                 ->imageEditor()
+                                                ->disk('public')
+                                                ->visibility('private')
                                                 ->directory('ktp'),
                                             Forms\Components\FileUpload::make('scan_kk')
                                                 ->label('Kartu Keluarga')
@@ -287,13 +291,11 @@ class Profil extends Page implements HasForms
             'name' => $data['name'],
             'email' => $data['email'],
         ];
-        // jika password diisi
+        // jika password diisi maka tambahkan password ke dalam array $user untuk di update
         if ($data['password']) {
             $user['password'] = $data['password'];
         }
         auth()->user()->update($user);
-
-
 
         // Simpan data karyawan
         $karyawan = [
@@ -303,12 +305,13 @@ class Profil extends Page implements HasForms
             'alamat' => $data['alamat'],
             'nomor_telepon' => $data['nomor_telepon'],
             'tanggal_mulai_bekerja' => $data['tanggal_mulai_bekerja'],
+            'scan_ktp' => $data['scan_ktp'],
         ];
 
         auth()->user()->karyawan()->updateOrCreate([
             'user_id' => auth()->user()->id
         ], $karyawan);
-        
+
 
         Notification::make()
             ->title('Profil berhasil diubah!')
