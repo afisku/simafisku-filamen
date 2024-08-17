@@ -72,6 +72,11 @@ class KaryawanResource extends Resource
                                 Textarea::make('alamat')
                                 ->autosize(),
                                 TextInput::make('nomor_telepon'),
+                                Select::make('unit_id')
+                                ->relationship('user', 'email')
+                                ->searchable()
+                                ->label('Email')
+                                ->preload(),
                                 FormGrid::make()
                                 ->schema([
                                 TextInput::make('nama_pasangan'),
