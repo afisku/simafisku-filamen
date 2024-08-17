@@ -38,6 +38,7 @@ class Profil extends Page implements HasForms
             'name'  => auth()->user()->name,
             'email'  => auth()->user()->email,
             'npy'  => auth()->user()?->karyawan?->npy,
+            'nik'  => auth()->user()?->karyawan?->nik,
             'nama_lengkap'  => auth()->user()?->karyawan?->nama_lengkap,
             'scan_ktp'  => url('storage/' . auth()->user()?->karyawan?->scan_ktp),
         ]);
