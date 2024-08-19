@@ -52,6 +52,7 @@ class Profil extends Page implements HasForms
             'status_karyawan_id'  => auth()->user()?->karyawan?->status_karyawan_id,
             'pendidikan_terakhir_id'  => auth()->user()?->karyawan?->pendidikan_terakhir_id,
             'scan_ktp'  => url('storage/' . auth()->user()?->karyawan?->scan_ktp),
+            'foto_karyawan'  => url('storage/' . auth()->user()?->karyawan?->foto_karyawan),
         ]);
     }
 
@@ -311,13 +312,30 @@ class Profil extends Page implements HasForms
         // Simpan data karyawan
         $karyawan = [
             'npy' => $data['npy'],
-            'nik' => $data['nik'],
             'nama_lengkap' => $data['nama_lengkap'],
+            'nik' => $data['nik'],
+            'tempat_lahir' => $data['tempat_lahir'],
+            'tanggal_lahir' => $data['tanggal_lahir'],
+            'jenis_kelamin' => $data['jenis_kelamin'],
             'alamat' => $data['alamat'],
             'nomor_telepon' => $data['nomor_telepon'],
+            'jabatan_id' => $data['jabatan_id'],
+            'posisi_kerja_id' => $data['posisi_kerja_id'],
+            'unit_id' => $data['unit_id'],
             'tanggal_mulai_bekerja' => $data['tanggal_mulai_bekerja'],
             'status_karyawan_id' => $data['status_karyawan_id'],
+            'pendidikan_terakhir_id' => $data['pendidikan_terakhir_id'],
+            'gelar_pendidikan_id' => $data['gelar_pendidikan_id'],
+            'jurusan' => $data['jurusan'],
+            'institusi_pendidikan' => $data['institusi_pendidikan'],
+            'tahun_lulus' => $data['tahun_lulus'],
+            'nama_pasangan' => $data['nama_pasangan'],
+            'jumlah_anak' => $data['jumlah_anak'],
+            'kontak_darurat' => $data['kontak_darurat'],
+            'foto_karyawan' => $data['foto_karyawan'],
             'scan_ktp' => $data['scan_ktp'],
+            'scan_kk' => $data['scan_kk'],
+            'scan_ijazah_terakhir' => $data['scan_ijazah_terakhir'],
         ];
         auth()->user()->karyawan()->updateOrCreate([
             'user_id' => auth()->user()->id,

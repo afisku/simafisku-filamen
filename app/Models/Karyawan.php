@@ -25,7 +25,7 @@ class Karyawan extends Model
         'posisi_kerja_id',
         'unit_id',
         'tanggal_mulai_bekerja',
-        'status_karyawan',
+        'status_karyawan_id',
         'pendidikan_terakhir_id',
         'gelar_pendidikan_id',
         'jurusan',
