@@ -175,16 +175,16 @@ class Profil extends Page implements HasForms
                                                 ->label('Tanggal Mulai Bekerja')
                                                 ->placeholder('d/m/Y')
                                                 ->native(false)
-                                                ->displayFormat('d/m/Y'),
+                                                            ->displayFormat('d/m/Y'),
                                         ]),
                                     Forms\Components\Section::make('Data Pendidikan')
                                         ->description('Data pendidikan terakhir, jurusan, Institusi pendidikan dan pelatihan pengembangan diri yang pernah diikuti')
                                         ->columns(3)
                                         ->schema([
                                             Forms\Components\Grid::make()
-                                                ->columnSpanFull()
-                                                ->schema([
-                                                    Forms\Components\Select::make('pendidikan_terakhir_id')
+                                            ->columnSpanFull()
+                                            ->schema([
+                                            Forms\Components\Select::make('pendidikan_terakhir_id')
                                                         ->label('Pendidikan Terakhir')
                                                         ->placeholder('Pilih Pendidikan Terakhir')
                                                         ->searchable()
@@ -285,7 +285,7 @@ class Profil extends Page implements HasForms
     {
         // dd($this->form->getState());
         $data = $this->form->getState();
-
+        // dd($data);
         // Simpan data pengguna
         $user = [
             'name' => $data['name'],
