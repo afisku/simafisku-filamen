@@ -40,6 +40,17 @@ class Profil extends Page implements HasForms
             'npy'  => auth()->user()?->karyawan?->npy,
             'nik'  => auth()->user()?->karyawan?->nik,
             'nama_lengkap'  => auth()->user()?->karyawan?->nama_lengkap,
+            'jenis_kelamin'  => auth()->user()?->karyawan?->jenis_kelamin,
+            'tempat_lahir'  => auth()->user()?->karyawan?->tempat_lahir,
+            'tanggal_lahir'  => auth()->user()?->karyawan?->tanggal_lahir,
+            'alamat'  => auth()->user()?->karyawan?->alamat,
+            'nomor_telepon'  => auth()->user()?->karyawan?->nomor_telepon,
+            'jabatan_id'  => auth()->user()?->karyawan?->jabatan_id,
+            'posisi_kerja_id'  => auth()->user()?->karyawan?->posisi_kerja_id,
+            'unit_id'  => auth()->user()?->karyawan?->unit_id,
+            'tanggal_mulai_bekerja'  => auth()->user()?->karyawan?->tanggal_mulai_bekerja,
+            'status_karyawan_id'  => auth()->user()?->karyawan?->status_karyawan_id,
+            'pendidikan_terakhir_id'  => auth()->user()?->karyawan?->pendidikan_terakhir_id,
             'scan_ktp'  => url('storage/' . auth()->user()?->karyawan?->scan_ktp),
         ]);
     }
@@ -53,7 +64,7 @@ class Profil extends Page implements HasForms
                     ->columns(2)
                     ->schema([
                         Forms\Components\TextInput::make('name')
-                            ->label('Nama Pengguna')
+                            ->label('Username')
                             ->placeholder('Nama Pengguna')
                             ->autofocus()
                             ->required(),
@@ -254,14 +265,14 @@ class Profil extends Page implements HasForms
                                     Forms\Components\Section::make('Dokumen SK')
                                         ->columns(2)
                                         ->schema([
-                                            Forms\Components\FileUpload::make('scan_sk_yayasan')
-                                                ->label('SK Yayasan')
-                                                ->imageEditor()
-                                                ->directory('sk_yayasan'),
-                                            Forms\Components\FileUpload::make('scan_sk_mengajar')
-                                                ->label('SK Mengajar')
-                                                ->imageEditor()
-                                                ->directory('sk_mengajar'),
+                                        Forms\Components\FileUpload::make('scan_sk_yayasan')
+                                        ->label('SK Yayasan')
+                                        ->imageEditor()
+                                        ->directory('sk_yayasan'),
+                                        Forms\Components\FileUpload::make('scan_sk_mengajar')
+                                        ->label('SK Mengajar')
+                                        ->imageEditor()
+                                        ->directory('sk_mengajar'),
                                         ]),
                                 ]),
                         ])
@@ -286,7 +297,6 @@ class Profil extends Page implements HasForms
     {
         // dd($this->form->getState());
         $data = $this->form->getState();
-        // dd($data);
         // Simpan data pengguna
         $user = [
             'name' => $data['name'],
@@ -297,7 +307,7 @@ class Profil extends Page implements HasForms
             $user['password'] = $data['password'];
         }
         auth()->user()->update($user);
-
+        
         // Simpan data karyawan
         $karyawan = [
             'npy' => $data['npy'],
@@ -306,11 +316,11 @@ class Profil extends Page implements HasForms
             'alamat' => $data['alamat'],
             'nomor_telepon' => $data['nomor_telepon'],
             'tanggal_mulai_bekerja' => $data['tanggal_mulai_bekerja'],
+            'status_karyawan_id' => $data['status_karyawan_id'],
             'scan_ktp' => $data['scan_ktp'],
         ];
-
         auth()->user()->karyawan()->updateOrCreate([
-            'user_id' => auth()->user()->id
+            'user_id' => auth()->user()->id,
         ], $karyawan);
 
 
