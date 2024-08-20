@@ -205,12 +205,17 @@ class KaryawanResource extends Resource
                     ->description(fn(Karyawan $record): string => $record->npy)
                     ->label('nama')
                     ->sortable(),
-                TextColumn::make('jabatanPegawai.nama_jabatan'),
+                TextColumn::make('jabatanPegawai.nama_jabatan')
+                    ->label('Jabatan'),
                 TextColumn::make('nomor_telepon')
                     ->icon('heroicon-m-phone')
                     ->iconPosition(IconPosition::Before)
                     ->iconColor('primary')
                     ->label('No.HP'),
+                TextColumn::make('user.email')
+                    ->icon('heroicon-m-envelope')
+                    ->iconColor('primary')
+                    ->label('email'),
                 ImageColumn::make('foto_karyawan')
                     ->label('Profile')
                     ->circular(),

@@ -336,6 +336,10 @@ class Profil extends Page implements HasForms
             'scan_ktp' => $data['scan_ktp'],
             'scan_kk' => $data['scan_kk'],
             'scan_ijazah_terakhir' => $data['scan_ijazah_terakhir'],
+            'scan_sertifikat_penghargaan' => $data['scan_sertifikat_penghargaan'],
+            'sertifikat_prestasi' => $data['sertifikat_prestasi'],
+            'scan_sk_yayasan' => $data['scan_sk_yayasan'],
+            'scan_sk_mengajar' => $data['scan_sk_mengajar'],
         ];
         auth()->user()->karyawan()->updateOrCreate([
             'user_id' => auth()->user()->id,
