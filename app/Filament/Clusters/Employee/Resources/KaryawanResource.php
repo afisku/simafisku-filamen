@@ -58,7 +58,8 @@ class KaryawanResource extends Resource
                                 ->schema([
                                     TextInput::make('npy'),
                                     TextInput::make('nik'),
-                                    TextInput::make('nama_lengkap'),
+                                    TextInput::make('nama_lengkap')
+                                    ->placeholder('nama lengkap dan gelar'),
                                 ])->columns(3),
                             FormGrid::make()
                                 ->schema([
@@ -73,7 +74,7 @@ class KaryawanResource extends Resource
                             Textarea::make('alamat')
                                 ->autosize(),
                             TextInput::make('nomor_telepon'),
-                            Select::make('unit_id')
+                            Select::make('user_id')
                                 ->relationship('user', 'email')
                                 ->searchable()
                                 ->label('Email')
@@ -90,7 +91,6 @@ class KaryawanResource extends Resource
                     Wizard\Step::make('Data Tambahan')
                         ->schema([
                             FormSection::make('Data Kerja')
-                                ->description('meluputi jabatan, posisi unit dan tanggal mulai bekerja di Al-Fityan')
                                 ->schema([
                                     Select::make('status_karyawan_id')
                                         ->relationship('statusKaryawan', 'status')
@@ -114,7 +114,6 @@ class KaryawanResource extends Resource
                                 ]),
 
                             FormSection::make('Data Pendidikan')
-                                ->description('Data pendidikan terakhir, jurusan, Institusi pendidikan dan pelatihan pengembangan diri yang pernah diikuti')
                                 ->schema([
                                     FormGrid::make()
                                         ->schema([
@@ -122,11 +121,8 @@ class KaryawanResource extends Resource
                                                 ->relationship('pendidikanTerakhir', 'nama_pendidikan_terakhir')
                                                 ->searchable()
                                                 ->preload(),
-                                            Select::make('gelar_pendidikan_id')
-                                                ->relationship('gelarPendidikan', 'nama_gelar_pendidikan')
-                                                ->searchable()
-                                                ->preload(),
-                                        ])->columns(2),
+                                            
+                                        ])->columns(1),
                                     FormGrid::make()
                                         ->schema([
 
@@ -205,17 +201,12 @@ class KaryawanResource extends Resource
                     ->description(fn(Karyawan $record): string => $record->npy)
                     ->label('nama')
                     ->sortable(),
+                TextColumn::make('nomor_telepon')
+                    ->label('Kontak')
+                    ->description(fn(Karyawan $record): string => $record->user->email),
+
                 TextColumn::make('jabatanPegawai.nama_jabatan')
                     ->label('Jabatan'),
-                TextColumn::make('nomor_telepon')
-                    ->icon('heroicon-m-phone')
-                    ->iconPosition(IconPosition::Before)
-                    ->iconColor('primary')
-                    ->label('No.HP'),
-                TextColumn::make('user.email')
-                    ->icon('heroicon-m-envelope')
-                    ->iconColor('primary')
-                    ->label('email'),
                 ImageColumn::make('foto_karyawan')
                     ->label('Profile')
                     ->circular(),
@@ -309,7 +300,6 @@ class KaryawanResource extends Resource
                                 ->schema([
                                     Group::make([
                                         TextEntry::make('pendidikanTerakhir.nama_pendidikan_terakhir'),
-                                        TextEntry::make('gelarPendidikan.nama_gelar_pendidikan'),
                                         TextEntry::make('jurusan'),
                                     ]),
                                     Group::make([

@@ -32,7 +32,6 @@ return new class extends Migration
 
             // Pendidikan
             $table->unsignedBigInteger('pendidikan_terakhir_id')->nullable();
-            $table->unsignedBigInteger('gelar_pendidikan_id')->nullable();
             $table->string('jurusan')->nullable();
             $table->string('institusi_pendidikan')->nullable();
             $table->year('tahun_lulus')->nullable();
@@ -64,7 +63,6 @@ return new class extends Migration
             $table->foreign('unit_id')->references('id')->on('unit')->onDelete('set null');
             $table->foreign('jabatan_id')->references('id')->on('jabatan')->onDelete('set null');
             $table->foreign('pendidikan_terakhir_id')->references('id')->on('pendidikan_terakhir')->onDelete('set null');
-            $table->foreign('gelar_pendidikan_id')->references('id')->on('gelar_pendidikan')->onDelete('set null');
             $table->foreign('posisi_kerja_id')->references('id')->on('posisi_kerja')->onDelete('set null');
             $table->foreign('status_karyawan_id')->references('id')->on('status_kepegawaian')->onDelete('set null');
         });

@@ -203,13 +203,7 @@ class Profil extends Page implements HasForms
                                                         ->searchable()
                                                         ->preload()
                                                         ->options(PendidikanTerakhir::all()->pluck('nama_pendidikan_terakhir', 'id')),
-                                                    Forms\Components\Select::make('gelar_pendidikan_id')
-                                                        ->label('Gelar Pendidikan')
-                                                        ->placeholder('Pilih Gelar Pendidikan')
-                                                        ->searchable()
-                                                        ->preload()
-                                                        ->options(GelarPendidikan::all()->pluck('nama_gelar_pendidikan', 'id')),
-                                                ])->columns(2),
+                                                ])->columns(1),
                                             Forms\Components\TextInput::make('institusi_pendidikan')
                                                 ->label('Nama Institusi Pendidikan')
                                                 ->placeholder('Nama Institusi Pendidikan'),
@@ -325,7 +319,6 @@ class Profil extends Page implements HasForms
             'tanggal_mulai_bekerja' => $data['tanggal_mulai_bekerja'],
             'status_karyawan_id' => $data['status_karyawan_id'],
             'pendidikan_terakhir_id' => $data['pendidikan_terakhir_id'],
-            'gelar_pendidikan_id' => $data['gelar_pendidikan_id'],
             'jurusan' => $data['jurusan'],
             'institusi_pendidikan' => $data['institusi_pendidikan'],
             'tahun_lulus' => $data['tahun_lulus'],
