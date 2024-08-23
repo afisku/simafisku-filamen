@@ -69,7 +69,11 @@ class KaryawanResource extends Resource
                                             'P' => 'Perempuan',
                                         ]),
                                     TextInput::make('tempat_lahir'),
-                                    DatePicker::make('tanggal_lahir'),
+                                    DatePicker::make('tanggal_lahir')
+                                    ->label('Tanggal Lahir')
+                                    ->placeholder('d/m/Y')
+                                    ->native(false)
+                                    ->displayFormat('d/m/Y'),
                                 ])->columns(3),
                             Textarea::make('alamat')
                                 ->autosize(),
@@ -200,7 +204,8 @@ class KaryawanResource extends Resource
                 TextColumn::make('nama_lengkap')
                     ->description(fn(Karyawan $record): string => $record->npy)
                     ->label('nama')
-                    ->sortable(),
+                    ->sortable()
+                    ->searchable(),
                 TextColumn::make('nomor_telepon')
                     ->label('Kontak')
                     ->description(fn(Karyawan $record): string => $record->user->email),
@@ -215,8 +220,19 @@ class KaryawanResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\ViewAction::make()
+                    ->iconButton()
+                    ->color('primary')
+                    ->icon('heroicon-m-eye'),
+                Tables\Actions\EditAction::make()
+                    ->iconButton()
+                    ->color('warning')
+                    ->icon('heroicon-m-pencil-square'),
+                Tables\Actions\DeleteAction::make()
+                    ->iconButton()
+                    ->color('danger')
+                    ->icon('heroicon-m-trash')
+                    ->modalHeading('Hapus Data Karyawan'),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
