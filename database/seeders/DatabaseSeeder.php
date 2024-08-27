@@ -21,6 +21,7 @@ class DatabaseSeeder extends Seeder
             PendidikanTerakhirSeeder::class,
             UnitSeeder::class,
             KaryawanSeeder::class,
+            KategoriSuratSeeder::class,
         ]);
     }
 }
