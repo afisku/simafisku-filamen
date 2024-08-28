@@ -11,14 +11,13 @@ class SuratKeluar extends Model
 
     protected $table = "surat_keluar";
 
-    protected $fillabel = [
+    protected $fillable = [
         "no_surat",
         "kategori_surat_id",
         "tgl_surat_keluar",
         "perihal",
         "tujuan_pengiriman",
         "dokumen",
-        "tujuan_pengiriman",
         "dibuat_oleh",
     ];
 

@@ -64,6 +64,7 @@ class KaryawanResource extends Resource
                             FormGrid::make()
                                 ->schema([
                                     Select::make('jenis_kelamin')
+                                        ->native(false)
                                         ->options([
                                             'L' => 'Laki-laki',
                                             'P' => 'Perempuan',
@@ -209,7 +210,6 @@ class KaryawanResource extends Resource
                 TextColumn::make('nomor_telepon')
                     ->label('Kontak')
                     ->description(fn(Karyawan $record): string => $record->user->email),
-
                 TextColumn::make('jabatanPegawai.nama_jabatan')
                     ->label('Jabatan'),
                 ImageColumn::make('foto_karyawan')
