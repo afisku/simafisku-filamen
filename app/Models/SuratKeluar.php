@@ -19,6 +19,7 @@ class SuratKeluar extends Model
         "tujuan_pengiriman",
         "dokumen",
         "dibuat_oleh",
+        "th_ajaran_id",
     ];
 
     public function user()
@@ -30,5 +31,10 @@ class SuratKeluar extends Model
     {
         return $this->belongsTo(KategoriSurat::class, 'kategori_surat_id');
     }
+
+    public function tahunAjaran()
+{
+    return $this->belongsTo(TahunAjaran::class, 'th_ajaran_id');
+}
 
 }
