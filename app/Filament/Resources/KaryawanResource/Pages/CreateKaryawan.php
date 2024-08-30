@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Filament\Clusters\Employee\Resources\KaryawanResource\Pages;
+namespace App\Filament\Resources\KaryawanResource\Pages;
 
-use App\Filament\Clusters\Employee\Resources\KaryawanResource;
+use App\Filament\Resources\KaryawanResource;
 use Filament\Actions;
 use Filament\Resources\Pages\CreateRecord;
 

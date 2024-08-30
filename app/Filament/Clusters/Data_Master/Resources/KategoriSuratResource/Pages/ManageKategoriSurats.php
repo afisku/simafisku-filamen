@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Filament\Clusters\Surat\Resources\KategoriSuratResource\Pages;
+namespace App\Filament\Clusters\Data_Master\Resources\KategoriSuratResource\Pages;
 
-use App\Filament\Clusters\Surat\Resources\KategoriSuratResource;
+use App\Filament\Clusters\Data_Master\Resources\KategoriSuratResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ManageRecords;
 
