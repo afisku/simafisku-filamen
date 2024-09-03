@@ -16,6 +16,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
+use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Clusters\Surat\Resources\SuratKeluarResource\Pages;
@@ -170,7 +171,8 @@ class SuratKeluarResource extends Resource
                 
             ])
             ->filters([
-                //
+            SelectFilter::make('th_ajaran_id')
+                ->relationship('tahunAjaran', 'ta')
             ])
             ->actions([
                 Tables\Actions\ViewAction::make()

@@ -16,4 +16,9 @@ class TahunAjaran extends Model
         'periode_akhir',
         'status'
     ];
+
+    public function suratKeluars()
+    {
+        return $this->hasMany(SuratKeluar::class, 'th_ajaran_id'); // 'th_ajaran_id' adalah foreign key di surat_keluar
+    }
 }
