@@ -171,7 +171,7 @@ class SuratKeluarResource extends Resource
                 
             ])
             ->filters([
-            SelectFilter::make('th_ajaran_id')
+            SelectFilter::make('SuratKeluar')
                 ->relationship('tahunAjaran', 'ta')
             ])
             ->actions([

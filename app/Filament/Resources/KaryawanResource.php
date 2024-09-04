@@ -2,24 +2,22 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\KaryawanResource\Pages;
-use App\Filament\Resources\KaryawanResource\RelationManagers;
-use App\Models\Karyawan;
-use Filament\Forms;
-use Filament\Forms\Form;
-use Filament\Resources\Resource;
-use Filament\Tables;
-use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 use filament;
+use stdClass;
+use Filament\Forms;
 use App\Models\Unit;
+use Filament\Tables;
+use App\Models\Karyawan;
+use Filament\Forms\Form;
+use Filament\Tables\Table;
 use Filament\Infolists\Infolist;
+use Filament\Resources\Resource;
 use App\Filament\Clusters\Employee;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Wizard;
 use Filament\Forms\Components\Textarea;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Contracts\HasTable;
 use Illuminate\Support\Facades\Storage;
 use Filament\Forms\Components\TextInput;
 use Filament\Infolists\Components\Group;
@@ -30,11 +28,15 @@ use Filament\Tables\Columns\ImageColumn;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Tables\Filters\SelectFilter;
+use Illuminate\Database\Eloquent\Builder;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Components\ImageEntry;
 use Filament\Forms\Components\Grid as FormGrid;
+use App\Filament\Resources\KaryawanResource\Pages;
+use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Forms\Components\Section as FormSection;
 use Filament\Infolists\Components\Grid as InfolistsGrid;
+use App\Filament\Resources\KaryawanResource\RelationManagers;
 use Filament\Infolists\Components\Section as InfolistSection;
 
 class KaryawanResource extends Resource
@@ -193,6 +195,17 @@ class KaryawanResource extends Resource
     {
         return $table
         ->columns([
+            TextColumn::make('No')
+            ->state(
+                static function (HasTable $livewire, stdClass $rowLoop): string {
+                    return (string) (
+                        $rowLoop->iteration +
+                        ($livewire->getTableRecordsPerPage() * (
+                            $livewire->getTablePage() - 1
+                        ))
+                    );
+                }
+            )->rowIndex(),
             TextColumn::make('nama_lengkap')
                 ->description(fn(Karyawan $record): string => $record->npy)
                 ->label('nama')
