@@ -7,6 +7,7 @@ use Filament\Tables;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
 use App\Models\SuratKeluar;
+use App\Models\TahunAjaran;
 use App\Models\KategoriSurat;
 use App\Filament\Clusters\Surat;
 use Filament\Resources\Resource;
@@ -42,7 +43,7 @@ class SuratKeluarResource extends Resource
                         ->native(false)
                         ->displayFormat('d/m/Y')
                         ->live()
-->afterStateUpdated(function (callable $get, callable $set) {
+    ->afterStateUpdated(function (callable $get, callable $set) {
     // Pastikan tanggal surat keluar dan kategori surat terisi
     if ($get('tgl_surat_keluar') != null && $get('kategori_surat_id') != null) {
 
@@ -88,9 +89,9 @@ class SuratKeluarResource extends Resource
                         ->preload()
                         ->options(KategoriSurat::all()->pluck('kategori', 'id'))
                         ->live()
-->afterStateUpdated(function (callable $get, callable $set) {
-    // Pastikan tanggal surat keluar dan kategori surat terisi
-    if ($get('tgl_surat_keluar') != null && $get('kategori_surat_id') != null) {
+                        ->afterStateUpdated(function (callable $get, callable $set) {
+        // Pastikan tanggal surat keluar dan kategori surat terisi
+        if ($get('tgl_surat_keluar') != null && $get('kategori_surat_id') != null) {
 
         // Ambil data tanggal surat
         $tanggalSurat = $get('tgl_surat_keluar');
@@ -171,9 +172,10 @@ class SuratKeluarResource extends Resource
                 
             ])
             ->filters([
-            SelectFilter::make('SuratKeluar')
-                ->relationship('tahunAjaran', 'ta')
+            SelectFilter::make('th_ajaran_id')
+                ->options(TahunAjaran::all()->pluck('ta','id'))
             ])
+            
             ->actions([
                 Tables\Actions\ViewAction::make()
                     ->iconButton()

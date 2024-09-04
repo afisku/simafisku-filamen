@@ -14,5 +14,10 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    if (auth()->check()) {
+        return redirect('/admin'); // Sesuaikan dengan dashboard atau halaman utama setelah login
+    }
+    return redirect('/admin/login');
 });
+
+
