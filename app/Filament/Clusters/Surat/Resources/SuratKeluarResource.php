@@ -2,6 +2,7 @@
 
 namespace App\Filament\Clusters\Surat\Resources;
 
+use stdClass;
 use Carbon\Carbon;
 use Filament\Forms;
 use Filament\Tables;
@@ -17,12 +18,16 @@ use Filament\Forms\Components\Select;
 use Filament\Tables\Filters\Indicator;
 use Filament\Forms\Components\Textarea;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Contracts\HasTable;
 use Filament\Forms\Components\TextInput;
 use Filament\Tables\Enums\FiltersLayout;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
+use Filament\Tables\Actions\ExportAction;
 use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Builder;
+use App\Filament\Exports\SuratKeluarExporter;
+use Filament\Tables\Actions\HeaderActionsPosition;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Clusters\Surat\Resources\SuratKeluarResource\Pages;
 use App\Filament\Clusters\Surat\Resources\SuratKeluarResource\RelationManagers;
@@ -158,6 +163,16 @@ class SuratKeluarResource extends Resource
     {
         return $table
             ->columns([
+                TextColumn::make('No')->state(
+                    static function (HasTable $livewire, stdClass $rowLoop): string {
+                        return (string) (
+                            $rowLoop->iteration +
+                            ($livewire->getTableRecordsPerPage() * (
+                                $livewire->getTablePage() - 1
+                            ))
+                        );
+                    }
+                )->rowIndex(),
                 TextColumn::make('no_surat')
                     ->searchable(),
                 TextColumn::make('perihal'),
@@ -179,7 +194,7 @@ class SuratKeluarResource extends Resource
             SelectFilter::make('th_ajaran_id')
                 ->options(TahunAjaran::all()->pluck('ta','id'))
                 ->label('Tahun Ajaran'),
-                Filter::make('created_at')
+                Filter::make('tgl_surat_keluar')
                 ->form([
                     DatePicker::make('created_from'),
                     DatePicker::make('created_until'),
@@ -188,11 +203,11 @@ class SuratKeluarResource extends Resource
                     return $query
                         ->when(
                             $data['created_from'],
-                            fn (Builder $query, $date): Builder => $query->whereDate('created_at', '>=', $date),
+                            fn (Builder $query, $date): Builder => $query->whereDate('tgl_surat_keluar', '>=', $date),
                         )
                         ->when(
                             $data['created_until'],
-                            fn (Builder $query, $date): Builder => $query->whereDate('created_at', '<=', $date),
+                            fn (Builder $query, $date): Builder => $query->whereDate('tgl_surat_keluar', '<=', $date),
                         );
                 })
         ->indicateUsing(function (array $data): array {
@@ -209,13 +224,12 @@ class SuratKeluarResource extends Resource
  
         return $indicators;
     })
-            ])
-            
-            ->actions([
-                Tables\Actions\ViewAction::make()
-                    ->iconButton()
-                    ->color('primary')
-                    ->icon('heroicon-m-eye'),
+        ])
+        ->actions([
+            Tables\Actions\ViewAction::make()
+                ->iconButton()
+                ->color('primary')
+                ->icon('heroicon-m-eye'),
                 Tables\Actions\EditAction::make()
                     ->iconButton()
                     ->color('warning')
@@ -226,6 +240,9 @@ class SuratKeluarResource extends Resource
                     ->icon('heroicon-m-trash')
                     ->modalHeading('Hapus Data Karyawan'),
             ])
+            ->headerActions([
+                ExportAction::make()->exporter(SuratKeluarExporter::class)
+                ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
