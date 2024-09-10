@@ -27,6 +27,7 @@ use Filament\Tables\Actions\ExportAction;
 use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Builder;
 use App\Filament\Exports\SuratKeluarExporter;
+use Filament\Tables\Actions\ExportBulkAction;
 use Filament\Tables\Actions\HeaderActionsPosition;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Clusters\Surat\Resources\SuratKeluarResource\Pages;
@@ -210,20 +211,20 @@ class SuratKeluarResource extends Resource
                             fn (Builder $query, $date): Builder => $query->whereDate('tgl_surat_keluar', '<=', $date),
                         );
                 })
-        ->indicateUsing(function (array $data): array {
-        $indicators = [];
-        if ($data['created_from'] ?? null) {
-            $indicators['created_from'] = Indicator::make('Created from ' . Carbon::parse($data['created_from'])->toFormattedDateString())
-                ->removeField('from');
-        }
- 
-        if ($data['created_until'] ?? null) {
-            $indicators[] = Indicator::make('Created until ' . Carbon::parse($data['created_until'])->toFormattedDateString())
-                ->removeField('created_until');
-        }
- 
-        return $indicators;
-    })
+            ->indicateUsing(function (array $data): array {
+                $indicators = [];
+                if ($data['created_from'] ?? null) {
+                    $indicators['created_from'] = Indicator::make('Created from ' . Carbon::parse($data['created_from'])->toFormattedDateString())
+                        ->removeField('from');
+                }
+        
+                if ($data['created_until'] ?? null) {
+                    $indicators[] = Indicator::make('Created until ' . Carbon::parse($data['created_until'])->toFormattedDateString())
+                        ->removeField('created_until');
+                }
+        
+                return $indicators;
+            })
         ])
         ->actions([
             Tables\Actions\ViewAction::make()
@@ -241,12 +242,15 @@ class SuratKeluarResource extends Resource
                     ->modalHeading('Hapus Data Karyawan'),
             ])
             ->headerActions([
-                ExportAction::make()->exporter(SuratKeluarExporter::class)
+                ExportAction::make()
+                ->exporter(SuratKeluarExporter::class)
                 ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
+                ExportBulkAction::make()
+                ->exporter(SuratKeluarExporter::class)
             ]);
     }
 

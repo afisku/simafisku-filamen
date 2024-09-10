@@ -14,13 +14,13 @@ class SuratKeluarExporter extends Exporter
     public static function getColumns(): array
     {
         return [
-            ExportColom::make('no_surat'),
-            ExportColom::make('kategori_surat_id'),
-            ExportColom::make('tgl_surat_keluar'),
-            ExportColom::make('perihal'),
-            ExportColom::make('tujuan_pengiriman'),
-            ExportColom::make('dibuat_oleh'),
-            ExportColom::make('th_ajaran_id')
+            ExportColumn::make('no_surat'),
+            ExportColumn::make('kategoriSurat.kategori'),
+            ExportColumn::make('tgl_surat_keluar'),
+            ExportColumn::make('perihal'),
+            ExportColumn::make('tujuan_pengiriman'),
+            ExportColumn::make('user.name'),
+            ExportColumn::make('tahunAjaran.ta')
         ];
     }
 
