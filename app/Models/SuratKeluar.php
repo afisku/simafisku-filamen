@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class SuratKeluar extends Model
 {
@@ -22,19 +23,23 @@ class SuratKeluar extends Model
         "th_ajaran_id",
     ];
 
-    public function user()
+    public function user() : BelongsTo
     {
-        return $this->belongsTo(User::class, 'dibuat_oleh');
+        return $this->belongsTo(User::class);
     }
    
-    public function kategoriSurat()
+
+
+    public function kategoriSurat(): BelongsTo
     {
-        return $this->belongsTo(KategoriSurat::class, 'kategori_surat_id');
+        return $this->belongsTo(KategoriSurat::class);
     }
 
-    public function tahunAjaran()
-{
-    return $this->belongsTo(TahunAjaran::class, 'th_ajaran_id');
-}
+
+
+    public function tahunAjaran(): BelongsTo
+    {
+        return $this->belongsTo(TahunAjaran::class);
+    }
 
 }

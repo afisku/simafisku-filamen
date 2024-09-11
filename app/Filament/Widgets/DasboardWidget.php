@@ -14,9 +14,16 @@ class DasboardWidget extends BaseWidget
         return [
             Stat::make('Karyawan', Karyawan::count())
             ->description('Pendidik dan Tendik')
-            ->descriptionIcon('heroicon-m-user-group', IconPosition::Before),
-            // Stat::make('Bounce rate', '21%'),
-            // Stat::make('Average time on page', '3:12'),
+            ->descriptionIcon('heroicon-m-user-group', IconPosition::Before)
+            ->color('primary'),
+            Stat::make('Data Siswa', '321')
+            ->description('All Data Siswa')
+            ->descriptionIcon('heroicon-m-user-group', IconPosition::Before)
+            ->color('primary'),
+            Stat::make('Gedung', '12')
+            ->description('Jumlah Gedung')
+            ->descriptionIcon('heroicon-m-building-library', IconPosition::Before)
+            ->color('primary'),
         ];
     }
 }
