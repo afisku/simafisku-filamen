@@ -12,6 +12,7 @@ class TahunAjaran extends Model
 
     protected $fillable = [
         'ta',
+        'angkatan',
         'periode_mulai',
         'periode_akhir',
         'status'

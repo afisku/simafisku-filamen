@@ -41,6 +41,12 @@ class TahunAjaranResource extends Resource
                     ->required()
                     ->maxLength(255)
                     ->columnSpanFull(),
+                Forms\Components\TextInput::make('angkatan')
+                    ->label('Angkatan')
+                    ->placeholder('Penulisan Menggunakan Angka Romawi Cth : IX, XII')
+                    ->required()
+                    ->maxLength(255)
+                    ->columnSpanFull(),
                 Forms\Components\DateTimePicker::make('periode_mulai')
                     ->label('Mulai'),
                 Forms\Components\DateTimePicker::make('periode_akhir')
@@ -69,6 +75,9 @@ class TahunAjaranResource extends Resource
                     ->alignCenter(),
                 Tables\Columns\TextColumn::make('ta')
                     ->label('Tahun Ajaran')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('angkatan')
+                    ->label('Angkatan')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('periode_mulai')
                     ->dateTime()
