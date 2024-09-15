@@ -21,6 +21,7 @@ class Msiswa extends Model
          'nspn',
          'nm_siswa',
          'jk',
+         'nis',
          'nisn',
          'nik',
          'tempat_lahir',
@@ -129,6 +130,11 @@ class Msiswa extends Model
      public function penghasilanIbu()
      {
          return $this->belongsTo(PenghasilanOrtu::class, 'penghasilan_ibu_id');
+     }
+
+     public function statusStuden()
+     {
+         return $this->belongsTo(StatusSiswa::class, 'status_siswa_id');
      }
  
      // Accessor untuk nilai null yang diganti dengan '-'

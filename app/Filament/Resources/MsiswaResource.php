@@ -11,6 +11,7 @@ use Filament\Tables\Table;
 use Filament\Resources\Resource;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Forms\Components\Grid as FormGrid;
@@ -145,7 +146,33 @@ class MsiswaResource extends Resource
     {
         return $table
             ->columns([
-                //
+                TextColumn::make('nis')
+                    ->label('NIS')
+                    ->searchable(),
+                TextColumn::make('nisn')
+                    ->label('NISN')
+                    ->searchable(),
+                TextColumn::make('nm_siswa')
+                    ->label('Nama Lengkap')
+                    ->searchable(),
+                TextColumn::make('tempat_lahir')
+                    ->label('Tempat Lahir'),
+                TextColumn::make('tgl_lahir')
+                    ->label('Tgl Lahir')
+                    ->date('d F Y'),
+                TextColumn::make('statusStuden.status')
+                    ->badge()
+                    ->sortable()
+                    ->color(function (string $state): string {
+                        return match ($state) {
+                            'Aktif' => 'success',
+                            'Nonsatif' => 'danger',
+                            'Pindah' => 'primary',
+                            'Lulus' => 'primary',
+                            'Cuti' => 'primary',
+                            'Drop Out' => 'danger',
+                        };
+                    })
             ])
             ->filters([
                 //

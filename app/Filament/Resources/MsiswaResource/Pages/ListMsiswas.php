@@ -2,11 +2,13 @@
 
 namespace App\Filament\Resources\MsiswaResource\Pages;
 
-use App\Filament\Resources\MsiswaResource;
-use App\Models\Msiswa;
 use Filament\Actions;
-use Filament\Resources\Pages\ListRecords;
+use App\Models\Msiswa;
+use App\Imports\ImportDataSiswa;
 use Illuminate\Contracts\View\View;
+use Maatwebsite\Excel\Facades\Excel;
+use Filament\Resources\Pages\ListRecords;
+use App\Filament\Resources\MsiswaResource;
 
 class ListMsiswas extends ListRecords
 {
@@ -27,10 +29,13 @@ class ListMsiswas extends ListRecords
 
     public $file = '';
     public function save(){
-        Msiswa::create([
-            'nis' => '123',
-            'nisn' => '1234',
-            'nm_siswa' => 'edy saputra',
-        ]);
+        if ($this->file != ''){
+            Excel::import(new ImportDataSiswa, $this->file);
+        }
+        // Msiswa::create([
+        //     'nis' => '123',
+        //     'nisn' => '1234',
+        //     'nm_siswa' => 'edy saputra',
+        // ]);
     }
 }

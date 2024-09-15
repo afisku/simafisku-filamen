@@ -70,7 +70,6 @@ class KaryawanResource extends Resource
                                 TextInput::make('tempat_lahir'),
                                 DatePicker::make('tanggal_lahir')
                                 ->label('Tanggal Lahir')
-                                ->placeholder('d/m/Y')
                                 ->native(false)
                                 ->displayFormat('d/m/Y'),
                             ])->columns(3),

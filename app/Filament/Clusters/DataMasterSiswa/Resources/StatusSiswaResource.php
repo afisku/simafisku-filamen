@@ -3,9 +3,9 @@
 namespace App\Filament\Clusters\DataMasterSiswa\Resources;
 
 use App\Filament\Clusters\DataMasterSiswa;
-use App\Filament\Clusters\DataMasterSiswa\Resources\CStatusSiswaResource\Pages;
-use App\Filament\Clusters\DataMasterSiswa\Resources\CStatusSiswaResource\RelationManagers;
-use App\Models\CStatusSiswa;
+use App\Filament\Clusters\DataMasterSiswa\Resources\StatusSiswaResource\Pages;
+use App\Filament\Clusters\DataMasterSiswa\Resources\StatusSiswaResource\RelationManagers;
+use App\Models\StatusSiswa;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -14,9 +14,9 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class CStatusSiswaResource extends Resource
+class StatusSiswaResource extends Resource
 {
-    protected static ?string $model = CStatusSiswa::class;
+    protected static ?string $model = StatusSiswa::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
@@ -26,7 +26,8 @@ class CStatusSiswaResource extends Resource
     {
         return $form
             ->schema([
-                //
+                Forms\Components\TextInput::make('status')
+                    ->maxLength(255),
             ]);
     }
 
@@ -34,13 +35,23 @@ class CStatusSiswaResource extends Resource
     {
         return $table
             ->columns([
-                //
+                Tables\Columns\TextColumn::make('status')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('created_at')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('updated_at')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 //
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -49,19 +60,10 @@ class CStatusSiswaResource extends Resource
             ]);
     }
 
-    public static function getRelations(): array
-    {
-        return [
-            //
-        ];
-    }
-
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListCStatusSiswas::route('/'),
-            'create' => Pages\CreateCStatusSiswa::route('/create'),
-            'edit' => Pages\EditCStatusSiswa::route('/{record}/edit'),
+            'index' => Pages\ManageStatusSiswas::route('/'),
         ];
     }
 }
