@@ -106,15 +106,34 @@ class Profil extends Page implements HasForms
                                         ->options([
                                             'L' => 'Laki-laki',
                                             'P' => 'Perempuan',
-                                        ]),
+                                        ])
+                                        ->live()
+                                        ->afterStateUpdated(function (callable $get, callable $set) {
+                                            if ($get('jenis_kelamin') != null && $get('tempat_lahir') != null && $get('tanggal_lahir') != null) {
+                                                $set('alamat', ($get('jenis_kelamin') . ' - ' . $get('tanggal_lahir') . ' - ' . $get('tempat_lahir')));
+                                            }
+                                        }),
                                     Forms\Components\TextInput::make('tempat_lahir')
                                         ->label('Tempat lahir')
-                                        ->placeholder('Tempat lahir'),
+                                        ->placeholder('Tempat lahir')
+                                        ->live()
+                                        ->afterStateUpdated(function (callable $get, callable $set) {
+                                            if ($get('jenis_kelamin') != null && $get('tempat_lahir') != null && $get('tanggal_lahir') != null) {
+                                                $pt = PendidikanTerakhir::where('id', $get('pendidikan_terakhir_id'))->first();
+                                                $set('alamat', ($pt->nama_pendidikan_terakhir . '/' . $get('jenis_kelamin')));
+                                            }
+                                        }),
                                     Forms\Components\DatePicker::make('tanggal_lahir')
                                         ->label('Tanggal Lahir')
                                         ->placeholder('d/m/Y')
                                         ->native(false)
-                                        ->displayFormat('d/m/Y'),
+                                        ->displayFormat('d/m/Y')
+                                        ->live()
+                                        ->afterStateUpdated(function (callable $get, callable $set) {
+                                            if ($get('jenis_kelamin') != null && $get('tempat_lahir') != null && $get('tanggal_lahir') != null) {
+                                                $set('alamat', ($get('jenis_kelamin') . '/' . $get('tanggal_lahir') . '/' . $get('tempat_lahir')));
+                                            }
+                                        }),
                                     Forms\Components\Textarea::make('alamat')
                                         ->label('Alamat')
                                         ->placeholder('Isi dengan singkat dan jelas')
