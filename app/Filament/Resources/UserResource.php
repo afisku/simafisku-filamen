@@ -22,7 +22,7 @@ class UserResource extends Resource
 
     protected static ?string $navigationLabel = 'Pengguna';
 
-    protected static ?string $navigationGroup = 'Manajemen Pengguna';
+    protected static ?string $navigationGroup = 'Manajemen User';
 
     protected static ?string $slug = 'pengguna';
 
@@ -59,14 +59,18 @@ class UserResource extends Resource
                     ->password()
                     ->revealable()
                     ->confirmed()
-                    ->required(fn(string $operation) => $operation == 'create'),
+                    ->dehydrated(fn ($state) => filled($state))
+                    ->required(fn(string $context): bool => $context === 'create'),
+                    // ->required(fn(string $operation) => $operation == 'create'),
                 Forms\Components\TextInput::make('password_confirmation')
                     ->label('Konfirmasi Password')
                     ->placeholder('Konfirmasi Password')
                     ->password()
                     ->revealable()
                     ->dehydrated(false)
-                    ->required(fn(string $operation) => $operation == 'create'),
+                    ->dehydrated(fn ($state) => filled($state))
+                    ->required(fn(string $context): bool => $context === 'create'),
+                    // ->required(fn(string $operation) => $operation == 'create'),
             ]);
     }
 

@@ -10,6 +10,7 @@ use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -37,6 +38,12 @@ class TahunAjaranResource extends Resource
                 Forms\Components\TextInput::make('ta')
                     ->label('Tahun Ajaran')
                     ->placeholder('Contoh: 2022/2023')
+                    ->required()
+                    ->maxLength(255)
+                    ->columnSpanFull(),
+                Forms\Components\TextInput::make('angkatan')
+                    ->label('Angkatan')
+                    ->placeholder('Penulisan Menggunakan Angka Romawi Cth : IX, XII')
                     ->required()
                     ->maxLength(255)
                     ->columnSpanFull(),
@@ -69,14 +76,18 @@ class TahunAjaranResource extends Resource
                 Tables\Columns\TextColumn::make('ta')
                     ->label('Tahun Ajaran')
                     ->searchable(),
+                Tables\Columns\TextColumn::make('angkatan')
+                    ->label('Angkatan')
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('periode_mulai')
                     ->dateTime()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('periode_akhir')
                     ->dateTime()
                     ->sortable(),
-                Tables\Columns\IconColumn::make('status')
-                    ->boolean(),
+                // Tables\Columns\IconColumn::make('status')
+                //     ->boolean(),
+                ToggleColumn::make('status'),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

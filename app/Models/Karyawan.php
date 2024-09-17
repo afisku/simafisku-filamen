@@ -25,9 +25,8 @@ class Karyawan extends Model
         'posisi_kerja_id',
         'unit_id',
         'tanggal_mulai_bekerja',
-        'status_karyawan',
+        'status_karyawan_id',
         'pendidikan_terakhir_id',
-        'gelar_pendidikan_id',
         'jurusan',
         'institusi_pendidikan',
         'tahun_lulus',
@@ -69,10 +68,6 @@ class Karyawan extends Model
         return $this->belongsTo(PendidikanTerakhir::class, 'pendidikan_terakhir_id');
     }
 
-    public function gelarPendidikan()
-    {
-        return $this->belongsTo(GelarPendidikan::class, 'gelar_pendidikan_id');
-    }
 
     public function statusKaryawan()
     {

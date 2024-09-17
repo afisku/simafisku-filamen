@@ -40,7 +40,19 @@ class Profil extends Page implements HasForms
             'npy'  => auth()->user()?->karyawan?->npy,
             'nik'  => auth()->user()?->karyawan?->nik,
             'nama_lengkap'  => auth()->user()?->karyawan?->nama_lengkap,
+            'jenis_kelamin'  => auth()->user()?->karyawan?->jenis_kelamin,
+            'tempat_lahir'  => auth()->user()?->karyawan?->tempat_lahir,
+            'tanggal_lahir'  => auth()->user()?->karyawan?->tanggal_lahir,
+            'alamat'  => auth()->user()?->karyawan?->alamat,
+            'nomor_telepon'  => auth()->user()?->karyawan?->nomor_telepon,
+            'jabatan_id'  => auth()->user()?->karyawan?->jabatan_id,
+            'posisi_kerja_id'  => auth()->user()?->karyawan?->posisi_kerja_id,
+            'unit_id'  => auth()->user()?->karyawan?->unit_id,
+            'tanggal_mulai_bekerja'  => auth()->user()?->karyawan?->tanggal_mulai_bekerja,
+            'status_karyawan_id'  => auth()->user()?->karyawan?->status_karyawan_id,
+            'pendidikan_terakhir_id'  => auth()->user()?->karyawan?->pendidikan_terakhir_id,
             'scan_ktp'  => url('storage/' . auth()->user()?->karyawan?->scan_ktp),
+            'foto_karyawan'  => url('storage/' . auth()->user()?->karyawan?->foto_karyawan),
         ]);
     }
 
@@ -53,7 +65,7 @@ class Profil extends Page implements HasForms
                     ->columns(2)
                     ->schema([
                         Forms\Components\TextInput::make('name')
-                            ->label('Nama Pengguna')
+                            ->label('Username')
                             ->placeholder('Nama Pengguna')
                             ->autofocus()
                             ->required(),
@@ -195,28 +207,22 @@ class Profil extends Page implements HasForms
                                                 ->label('Tanggal Mulai Bekerja')
                                                 ->placeholder('d/m/Y')
                                                 ->native(false)
-                                                ->displayFormat('d/m/Y'),
+                                                            ->displayFormat('d/m/Y'),
                                         ]),
                                     Forms\Components\Section::make('Data Pendidikan')
                                         ->description('Data pendidikan terakhir, jurusan, Institusi pendidikan dan pelatihan pengembangan diri yang pernah diikuti')
                                         ->columns(3)
                                         ->schema([
                                             Forms\Components\Grid::make()
-                                                ->columnSpanFull()
-                                                ->schema([
-                                                    Forms\Components\Select::make('pendidikan_terakhir_id')
+                                            ->columnSpanFull()
+                                            ->schema([
+                                            Forms\Components\Select::make('pendidikan_terakhir_id')
                                                         ->label('Pendidikan Terakhir')
                                                         ->placeholder('Pilih Pendidikan Terakhir')
                                                         ->searchable()
                                                         ->preload()
                                                         ->options(PendidikanTerakhir::all()->pluck('nama_pendidikan_terakhir', 'id')),
-                                                    Forms\Components\Select::make('gelar_pendidikan_id')
-                                                        ->label('Gelar Pendidikan')
-                                                        ->placeholder('Pilih Gelar Pendidikan')
-                                                        ->searchable()
-                                                        ->preload()
-                                                        ->options(GelarPendidikan::all()->pluck('nama_gelar_pendidikan', 'id')),
-                                                ])->columns(2),
+                                                ])->columns(1),
                                             Forms\Components\TextInput::make('institusi_pendidikan')
                                                 ->label('Nama Institusi Pendidikan')
                                                 ->placeholder('Nama Institusi Pendidikan'),
@@ -273,14 +279,14 @@ class Profil extends Page implements HasForms
                                     Forms\Components\Section::make('Dokumen SK')
                                         ->columns(2)
                                         ->schema([
-                                            Forms\Components\FileUpload::make('scan_sk_yayasan')
-                                                ->label('SK Yayasan')
-                                                ->imageEditor()
-                                                ->directory('sk_yayasan'),
-                                            Forms\Components\FileUpload::make('scan_sk_mengajar')
-                                                ->label('SK Mengajar')
-                                                ->imageEditor()
-                                                ->directory('sk_mengajar'),
+                                        Forms\Components\FileUpload::make('scan_sk_yayasan')
+                                        ->label('SK Yayasan')
+                                        ->imageEditor()
+                                        ->directory('sk_yayasan'),
+                                        Forms\Components\FileUpload::make('scan_sk_mengajar')
+                                        ->label('SK Mengajar')
+                                        ->imageEditor()
+                                        ->directory('sk_mengajar'),
                                         ]),
                                 ]),
                         ])
@@ -305,7 +311,6 @@ class Profil extends Page implements HasForms
     {
         // dd($this->form->getState());
         $data = $this->form->getState();
-
         // Simpan data pengguna
         $user = [
             'name' => $data['name'],
@@ -316,20 +321,40 @@ class Profil extends Page implements HasForms
             $user['password'] = $data['password'];
         }
         auth()->user()->update($user);
-
+        
         // Simpan data karyawan
         $karyawan = [
             'npy' => $data['npy'],
-            'nik' => $data['nik'],
             'nama_lengkap' => $data['nama_lengkap'],
+            'nik' => $data['nik'],
+            'tempat_lahir' => $data['tempat_lahir'],
+            'tanggal_lahir' => $data['tanggal_lahir'],
+            'jenis_kelamin' => $data['jenis_kelamin'],
             'alamat' => $data['alamat'],
             'nomor_telepon' => $data['nomor_telepon'],
+            'jabatan_id' => $data['jabatan_id'],
+            'posisi_kerja_id' => $data['posisi_kerja_id'],
+            'unit_id' => $data['unit_id'],
             'tanggal_mulai_bekerja' => $data['tanggal_mulai_bekerja'],
+            'status_karyawan_id' => $data['status_karyawan_id'],
+            'pendidikan_terakhir_id' => $data['pendidikan_terakhir_id'],
+            'jurusan' => $data['jurusan'],
+            'institusi_pendidikan' => $data['institusi_pendidikan'],
+            'tahun_lulus' => $data['tahun_lulus'],
+            'nama_pasangan' => $data['nama_pasangan'],
+            'jumlah_anak' => $data['jumlah_anak'],
+            'kontak_darurat' => $data['kontak_darurat'],
+            'foto_karyawan' => $data['foto_karyawan'],
             'scan_ktp' => $data['scan_ktp'],
+            'scan_kk' => $data['scan_kk'],
+            'scan_ijazah_terakhir' => $data['scan_ijazah_terakhir'],
+            'scan_sertifikat_penghargaan' => $data['scan_sertifikat_penghargaan'],
+            'sertifikat_prestasi' => $data['sertifikat_prestasi'],
+            'scan_sk_yayasan' => $data['scan_sk_yayasan'],
+            'scan_sk_mengajar' => $data['scan_sk_mengajar'],
         ];
-
         auth()->user()->karyawan()->updateOrCreate([
-            'user_id' => auth()->user()->id
+            'user_id' => auth()->user()->id,
         ], $karyawan);
 
 

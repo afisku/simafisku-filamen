@@ -13,6 +13,14 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+// Route::get('/', function () {
+//     if (auth()->check()) {
+//         return redirect('/admin'); // Sesuaikan dengan dashboard atau halaman utama setelah login
+//     }
+//     return redirect('/admin/login');
+// });
+
 Route::get('/', function () {
-    return view('welcome');
+    // return view('welcome');
+    return redirect()->route('filament.admin.auth.login');
 });
