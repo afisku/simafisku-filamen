@@ -3,21 +3,22 @@
 namespace App\Exports;
 
 use App\Models\SuratKeluar;
+use Illuminate\Support\Carbon;
+use PhpOffice\PhpSpreadsheet\Cell\Cell;
+use Maatwebsite\Excel\Events\AfterSheet;
+use PhpOffice\PhpSpreadsheet\Style\Fill;
+use Maatwebsite\Excel\Concerns\WithEvents;
+use PhpOffice\PhpSpreadsheet\Style\Border;
+use Maatwebsite\Excel\Concerns\WithMapping;
+use PhpOffice\PhpSpreadsheet\Cell\DataType;
+use Maatwebsite\Excel\Concerns\WithHeadings;
+use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
+use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 use Maatwebsite\Excel\Concerns\WithColumnFormatting;
 use Maatwebsite\Excel\Concerns\WithCustomValueBinder;
-use Maatwebsite\Excel\Concerns\WithEvents;
-use Maatwebsite\Excel\Concerns\WithHeadings;
-use Maatwebsite\Excel\Concerns\WithMapping;
-use Maatwebsite\Excel\Events\AfterSheet;
-use PhpOffice\PhpSpreadsheet\Cell\Cell;
-use PhpOffice\PhpSpreadsheet\Cell\DataType;
 use PhpOffice\PhpSpreadsheet\Cell\DefaultValueBinder;
-use PhpOffice\PhpSpreadsheet\Style\Alignment;
-use PhpOffice\PhpSpreadsheet\Style\Border;
-use PhpOffice\PhpSpreadsheet\Style\Fill;
-use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 
 class SuratKeluarExport extends DefaultValueBinder implements FromCollection, WithMapping, WithHeadings, WithCustomValueBinder, WithColumnFormatting, ShouldAutoSize, WithEvents
 {
@@ -57,10 +58,11 @@ class SuratKeluarExport extends DefaultValueBinder implements FromCollection, Wi
 
     public function map($data): array
     {
+        $tglSuratKeluar = Carbon::parse($data->tgl_surat_keluar)->format('d F Y');
         $result = [
             'no_surat'          => $data->no_surat,
             'kategori'          => $data->kategoriSurat->kategori,
-            'tgl_surat_keluar'  => $data->tgl_surat_keluar,
+            'tgl_surat_keluar'  => $tglSuratKeluar,
             'perihal'           => $data->perihal,
             'tujuan_pengiriman' => $data->tujuan_pengiriman,
             'dibuat_oleh'       => $data->dibuatOleh->name,

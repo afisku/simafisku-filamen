@@ -186,7 +186,7 @@ class SuratKeluarResource extends Resource
                 TextColumn::make('tujuan_pengiriman')
                     ->label('Tujuan')
                     ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('user.karyawan.nama_lengkap')
+                TextColumn::make('dibuatOleh.karyawan.nama_lengkap')
                     ->label('Dibuat')
                     ->toggleable(isToggledHiddenByDefault: true),
                 
@@ -241,16 +241,16 @@ class SuratKeluarResource extends Resource
                     ->icon('heroicon-m-trash')
                     ->modalHeading('Hapus Data Karyawan'),
             ])
-            ->headerActions([
-                ExportAction::make()
-                ->exporter(SuratKeluarExporter::class)
-                ])
+            // ->headerActions([
+            //     ExportAction::make()
+            //     ->exporter(SuratKeluarExporter::class)
+            //     ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
-                ExportBulkAction::make()
-                ->exporter(SuratKeluarExporter::class)
+                // ExportBulkAction::make()
+                // ->exporter(SuratKeluarExporter::class)
             ]);
     }
 
