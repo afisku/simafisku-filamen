@@ -1,6 +1,8 @@
 <?php
 
+use App\Exports\SuratKeluarExport;
 use Illuminate\Support\Facades\Route;
+use Maatwebsite\Excel\Facades\Excel;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,3 +26,11 @@ Route::get('/', function () {
     // return view('welcome');
     return redirect()->route('filament.admin.auth.login');
 });
+
+Route::get('export-excel', function () {
+    try {
+        return Excel::download(new SuratKeluarExport, 'DATA_SURAT_KELUAR_' . now()->timestamp . '.xlsx');
+    } catch (\Throwable $th) {
+        return $th->getMessage();
+    }
+})->name('surat.keluar.export.excel');

@@ -23,9 +23,9 @@ class SuratKeluar extends Model
         "th_ajaran_id",
     ];
 
-    public function user() : BelongsTo
+    public function dibuatOleh() : BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'dibuat_oleh', 'id');
     }
    
 
@@ -39,7 +39,7 @@ class SuratKeluar extends Model
 
     public function tahunAjaran(): BelongsTo
     {
-        return $this->belongsTo(TahunAjaran::class);
+        return $this->belongsTo(TahunAjaran::class, 'th_ajaran_id', 'id');
     }
 
 }

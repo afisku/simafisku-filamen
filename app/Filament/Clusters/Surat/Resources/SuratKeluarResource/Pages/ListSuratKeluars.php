@@ -13,6 +13,11 @@ class ListSuratKeluars extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
+            Actions\Action::make('exportSuratKeluar')
+                ->label('EXPORT SURAT KELUAR')
+                ->color('gray')
+                // ->visible(auth()->user()->hasRole('superadmin'))
+                ->url(fn(): string => route('surat.keluar.export.excel')),
             Actions\CreateAction::make(),
         ];
     }

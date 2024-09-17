@@ -19,7 +19,7 @@ class SuratKeluarExporter extends Exporter
             ExportColumn::make('tgl_surat_keluar'),
             ExportColumn::make('perihal'),
             ExportColumn::make('tujuan_pengiriman'),
-            ExportColumn::make('user.name'),
+            ExportColumn::make('dibuatOleh.name'),
             ExportColumn::make('tahunAjaran.ta')
         ];
     }
