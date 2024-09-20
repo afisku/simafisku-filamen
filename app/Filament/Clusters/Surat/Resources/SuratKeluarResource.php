@@ -257,11 +257,6 @@ class SuratKeluarResource extends Resource
             //     ExportAction::make()
             //     ->exporter(SuratKeluarExporter::class)
             //     ])
-            // ->recordUrl(function ($record){
-            //     if ($record->trashed()){
-            //         return null;
-            //     }
-            // })
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
