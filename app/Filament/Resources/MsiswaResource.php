@@ -6,7 +6,7 @@ use Filament\Forms;
 use Filament\Tables;
 use App\Models\Msiswa;
 use Filament\Forms\Form;
-use App\Models\AgamaOrtu;
+use App\Models\Agama;
 use Filament\Tables\Table;
 use Filament\Resources\Resource;
 use Filament\Forms\Components\Select;
@@ -56,7 +56,7 @@ class MsiswaResource extends Resource
                             Select::make('agama_id')
                             ->searchable()
                             ->label('Agama')
-                            ->options(AgamaOrtu::all()->pluck('agama', 'id')),
+                            ->options(Agama::all()->pluck('agama', 'id')),
                             Select::make('yatim_piatu')
                                         ->native(false)
                                         ->options([

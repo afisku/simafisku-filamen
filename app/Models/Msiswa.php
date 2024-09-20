@@ -46,27 +46,6 @@ class Msiswa extends Model
          'doc_mutasi',
          'status_siswa_id',
          'tahun_ajaran_id',
-         'nm_ayah',
-         'nik_ayah',
-         'tahun_lahir_ayah',
-         'pendidikan_ayah_id',
-         'pekerjaan_ayah_id',
-         'penghasilan_ayah_id',
-         'nohp_ayah',
-         'nm_ibu',
-         'nik_ibu',
-         'tahun_lahir_ibu',
-         'pendidikan_ibu_id',
-         'pekerjaan_ibu_id',
-         'penghasilan_ibu_id',
-         'nohp_ibu',
-         'nm_wali',
-         'nik_wali',
-         'tahun_lahir_wali',
-         'pendidikan_wali_id',
-         'pekerjaan_wali_id',
-         'penghasilan_wali_id',
-         'nohp_wali',
      ];
  
      // Definisikan relasi dengan tabel status_siswa
@@ -94,9 +73,9 @@ class Msiswa extends Model
      }
  
      // Definisikan relasi dengan tabel agama_ortu
-     public function agamaAyah()
+     public function agamasiswa()
      {
-         return $this->belongsTo(AgamaOrtu::class, 'agama_id');
+         return $this->belongsTo(Agama::class, 'agama_id');
      }
  
      // Definisikan relasi dengan tabel pendidikan_ortu

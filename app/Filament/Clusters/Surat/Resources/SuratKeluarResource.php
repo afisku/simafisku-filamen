@@ -15,6 +15,7 @@ use App\Filament\Clusters\Surat;
 use Filament\Resources\Resource;
 use Filament\Tables\Filters\Filter;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Section;
 use Filament\Tables\Filters\Indicator;
 use Filament\Forms\Components\Textarea;
 use Filament\Tables\Columns\TextColumn;
@@ -37,7 +38,11 @@ class SuratKeluarResource extends Resource
 {
     protected static ?string $model = SuratKeluar::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-document-arrow-up';
+
+    protected static ?string $navigationLabel = 'Surat Keluar';
+
+    
 
     protected static ?string $cluster = Surat::class;
 
@@ -45,107 +50,116 @@ class SuratKeluarResource extends Resource
     {
         return $form
             ->schema([
-                TextInput::make('perihal'),
-                TextInput::make('tujuan_pengiriman'),
-                DatePicker::make('tgl_surat_keluar')
-                        ->label('Tanggal Surat Keluar')
-                        ->placeholder('d/m/Y')
-                        ->native(false)
-                        ->displayFormat('d/m/Y')
-                        ->live()
-    ->afterStateUpdated(function (callable $get, callable $set) {
-    // Pastikan tanggal surat keluar dan kategori surat terisi
-    if ($get('tgl_surat_keluar') != null && $get('kategori_surat_id') != null) {
+                Section::make()
+                ->schema([
+                        TextInput::make('perihal')
+                        ->required(),
+                        TextInput::make('tujuan_pengiriman')
+                        ->required(),
+                        DatePicker::make('tgl_surat_keluar')
+                            ->label('Tanggal Surat Keluar')
+                            ->required()
+                            ->placeholder('d/m/Y')
+                            ->native(false)
+                            ->displayFormat('d/m/Y')
+                            ->live()
+                            ->afterStateUpdated(function (callable $get, callable $set) {
+                            // Pastikan tanggal surat keluar dan kategori surat terisi
+                            if ($get('tgl_surat_keluar') != null && $get('kategori_surat_id') != null) {
 
-        // Ambil data tanggal surat
-        $tanggalSurat = $get('tgl_surat_keluar');
-        $tahun = date('Y', strtotime($tanggalSurat));
-        $bulan = date('n', strtotime($tanggalSurat));
+                                // Ambil data tanggal surat
+                                $tanggalSurat = $get('tgl_surat_keluar');
+                                $tahun = date('Y', strtotime($tanggalSurat));
+                                $bulan = date('n', strtotime($tanggalSurat));
 
-        // Konversi bulan ke angka Romawi menggunakan array
-        $bulanRomawiMap = [
-            1 => 'I', 2 => 'II', 3 => 'III', 4 => 'IV', 5 => 'V', 
-            6 => 'VI', 7 => 'VII', 8 => 'VIII', 9 => 'IX', 
-            10 => 'X', 11 => 'XI', 12 => 'XII'
-        ];
-        
-        $bulanRomawi = $bulanRomawiMap[$bulan] ?? '';
+                                // Konversi bulan ke angka Romawi menggunakan array
+                                $bulanRomawiMap = [
+                                    1 => 'I', 2 => 'II', 3 => 'III', 4 => 'IV', 5 => 'V', 
+                                    6 => 'VI', 7 => 'VII', 8 => 'VIII', 9 => 'IX', 
+                                    10 => 'X', 11 => 'XI', 12 => 'XII'
+                                ];
+                                
+                                $bulanRomawi = $bulanRomawiMap[$bulan] ?? '';
 
-        // Ambil kategori surat berdasarkan ID yang dipilih
-        $kategoriSurat = \App\Models\KategoriSurat::find($get('kategori_surat_id'));
-        $kodeKategori = $kategoriSurat->kode_kategori ?? '';
+                                // Ambil kategori surat berdasarkan ID yang dipilih
+                                $kategoriSurat = \App\Models\KategoriSurat::find($get('kategori_surat_id'));
+                                $kodeKategori = $kategoriSurat->kode_kategori ?? '';
 
-        // Dapatkan nomor urut terakhir dari surat keluar dengan tahun dan bulan yang sama
-        $lastSurat = \App\Models\SuratKeluar::whereYear('tgl_surat_keluar', $tahun)
-                        ->whereMonth('tgl_surat_keluar', $bulan)
-                        ->latest('id')
-                        ->first();
+                                // Dapatkan nomor urut terakhir dari surat keluar dengan tahun dan bulan yang sama
+                                $lastSurat = \App\Models\SuratKeluar::whereYear('tgl_surat_keluar', $tahun)
+                                                ->whereMonth('tgl_surat_keluar', $bulan)
+                                                ->latest('id')
+                                                ->first();
 
-        // Jika ada surat sebelumnya, ambil nomor urut terakhir, jika tidak mulai dari 1
-        $nomorUrut = $lastSurat ? intval(substr($lastSurat->no_surat, 0, 3)) + 1 : 1;
-        $nomorUrutFormatted = str_pad($nomorUrut, 3, '0', STR_PAD_LEFT);
+                                // Jika ada surat sebelumnya, ambil nomor urut terakhir, jika tidak mulai dari 1
+                                $nomorUrut = $lastSurat ? intval(substr($lastSurat->no_surat, 0, 3)) + 1 : 1;
+                                $nomorUrutFormatted = str_pad($nomorUrut, 3, '0', STR_PAD_LEFT);
 
-        // Gabungkan semua komponen untuk nomor surat
-        $noSurat = "$nomorUrutFormatted/$kodeKategori/SMPIT-AFISKU/$bulanRomawi/$tahun";
+                                // Gabungkan semua komponen untuk nomor surat
+                                $noSurat = "$nomorUrutFormatted/$kodeKategori/SMPIT-AFISKU/$bulanRomawi/$tahun";
 
-        // Set nilai `no_surat` otomatis di form
-        $set('no_surat', $noSurat);
-    }
-}),
-                Select::make('kategori_surat_id')
-                        ->label('Kategori Surat')
-                        ->placeholder('Pilih Kategori')
-                        ->searchable()
-                        ->preload()
-                        ->options(KategoriSurat::all()->pluck('kategori', 'id'))
-                        ->live()
-                        ->afterStateUpdated(function (callable $get, callable $set) {
-        // Pastikan tanggal surat keluar dan kategori surat terisi
-        if ($get('tgl_surat_keluar') != null && $get('kategori_surat_id') != null) {
+                                // Set nilai `no_surat` otomatis di form
+                                $set('no_surat', $noSurat);
+                                }
+                            }),
+                                Select::make('kategori_surat_id')
+                                ->label('Kategori Surat')
+                                ->required()
+                                ->placeholder('Pilih Kategori')
+                                ->searchable()
+                                ->preload()
+                                ->options(KategoriSurat::all()->pluck('kategori', 'id'))
+                                ->live()
+                                ->afterStateUpdated(function (callable $get, callable $set) {
+                                // Pastikan tanggal surat keluar dan kategori surat terisi
+                                if ($get('tgl_surat_keluar') != null && $get('kategori_surat_id') != null) {
 
-        // Ambil data tanggal surat
-        $tanggalSurat = $get('tgl_surat_keluar');
-        $tahun = date('Y', strtotime($tanggalSurat));
-        $bulan = date('n', strtotime($tanggalSurat));
+                                // Ambil data tanggal surat
+                                $tanggalSurat = $get('tgl_surat_keluar');
+                                $tahun = date('Y', strtotime($tanggalSurat));
+                                $bulan = date('n', strtotime($tanggalSurat));
 
-        // Konversi bulan ke angka Romawi menggunakan array
-        $bulanRomawiMap = [
-            1 => 'I', 2 => 'II', 3 => 'III', 4 => 'IV', 5 => 'V', 
-            6 => 'VI', 7 => 'VII', 8 => 'VIII', 9 => 'IX', 
-            10 => 'X', 11 => 'XI', 12 => 'XII'
-        ];
-        
-        $bulanRomawi = $bulanRomawiMap[$bulan] ?? '';
+                                // Konversi bulan ke angka Romawi menggunakan array
+                                $bulanRomawiMap = [
+                                    1 => 'I', 2 => 'II', 3 => 'III', 4 => 'IV', 5 => 'V', 
+                                    6 => 'VI', 7 => 'VII', 8 => 'VIII', 9 => 'IX', 
+                                    10 => 'X', 11 => 'XI', 12 => 'XII'
+                                ];
+                                
+                                $bulanRomawi = $bulanRomawiMap[$bulan] ?? '';
 
-        // Ambil kategori surat berdasarkan ID yang dipilih
-        $kategoriSurat = \App\Models\KategoriSurat::find($get('kategori_surat_id'));
-        $kodeKategori = $kategoriSurat->kode_kategori ?? '';
+                                // Ambil kategori surat berdasarkan ID yang dipilih
+                                $kategoriSurat = \App\Models\KategoriSurat::find($get('kategori_surat_id'));
+                                $kodeKategori = $kategoriSurat->kode_kategori ?? '';
 
-        // Dapatkan nomor urut terakhir dari surat keluar dengan tahun dan bulan yang sama
-        $lastSurat = \App\Models\SuratKeluar::whereYear('tgl_surat_keluar', $tahun)
-                        ->whereMonth('tgl_surat_keluar', $bulan)
-                        ->latest('id')
-                        ->first();
+                                // Dapatkan nomor urut terakhir dari surat keluar dengan tahun dan bulan yang sama
+                                $lastSurat = \App\Models\SuratKeluar::whereYear('tgl_surat_keluar', $tahun)
+                                                ->whereMonth('tgl_surat_keluar', $bulan)
+                                                ->latest('id')
+                                                ->first();
 
-        // Jika ada surat sebelumnya, ambil nomor urut terakhir, jika tidak mulai dari 1
-        $nomorUrut = $lastSurat ? intval(substr($lastSurat->no_surat, 0, 3)) + 1 : 1;
-        $nomorUrutFormatted = str_pad($nomorUrut, 3, '0', STR_PAD_LEFT);
+                                // Jika ada surat sebelumnya, ambil nomor urut terakhir, jika tidak mulai dari 1
+                                $nomorUrut = $lastSurat ? intval(substr($lastSurat->no_surat, 0, 3)) + 1 : 1;
+                                $nomorUrutFormatted = str_pad($nomorUrut, 3, '0', STR_PAD_LEFT);
 
-        // Gabungkan semua komponen untuk nomor surat
-        $noSurat = "$nomorUrutFormatted/$kodeKategori/SMPIT-AFISKU/$bulanRomawi/$tahun";
+                                // Gabungkan semua komponen untuk nomor surat
+                                $noSurat = "$nomorUrutFormatted/$kodeKategori/SMPIT-AFISKU/$bulanRomawi/$tahun";
 
-        // Set nilai `no_surat` otomatis di form
-        $set('no_surat', $noSurat);
-    }
-}),
-                TextInput::make('no_surat')
-                ->label('Nomor Surat')
-                ->columnSpanFull(),
-                
-                FileUpload::make('dokumen')
-                        ->label('Arsip')
-                        ->visibility('private')
-                        ->directory('dokumen_surat_keluar')
+                                // Set nilai `no_surat` otomatis di form
+                                $set('no_surat', $noSurat);
+                            }
+                        }),
+                                TextInput::make('no_surat')
+                                ->label('Nomor Surat')
+                                ->required()
+                                ->columnSpanFull(),
+                                
+                                FileUpload::make('dokumen')
+                                ->label('Arsip')
+                                ->visibility('private')
+                                ->directory('dokumen_surat_keluar')
+                                ->columnSpanFull(),
+                    ])->columns(2)
             ]);
     }
 
@@ -223,7 +237,8 @@ class SuratKeluarResource extends Resource
                 Tables\Actions\EditAction::make()
                     ->iconButton()
                     ->color('warning')
-                    ->icon('heroicon-m-pencil-square'),
+                    ->icon('heroicon-m-pencil-square')
+                    ->disabled(fn ($record) => true),
                 Tables\Actions\DeleteAction::make()
                     ->iconButton()
                     ->color('danger')
@@ -242,6 +257,11 @@ class SuratKeluarResource extends Resource
             //     ExportAction::make()
             //     ->exporter(SuratKeluarExporter::class)
             //     ])
+            // ->recordUrl(function ($record){
+            //     if ($record->trashed()){
+            //         return null;
+            //     }
+            // })
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
