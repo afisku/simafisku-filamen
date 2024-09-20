@@ -1,8 +1,9 @@
 <?php
 
+use App\Models\SuratKeluar;
 use App\Exports\SuratKeluarExport;
-use Illuminate\Support\Facades\Route;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,3 +35,10 @@ Route::get('export-excel', function () {
         return $th->getMessage();
     }
 })->name('surat.keluar.export.excel');
+
+Route::get('/download-dokumen/{suratKeluar}', function (SuratKeluar $suratKeluar) {
+    if ($suratKeluar->dokumen && Storage::disk('public')->exists($suratKeluar->dokumen)) {
+        return Storage::disk('public')->download($suratKeluar->dokumen);
+    }
+    return abort(404, 'File tidak ditemukan.');
+})->name('download-dokumen');

@@ -140,21 +140,10 @@ class SuratKeluarResource extends Resource
 }),
                 TextInput::make('no_surat')
                 ->label('Nomor Surat')
-                ->columnSpanFull()
-                ->disabledOn('create')
-                ->live()
-                ->rules([
-                    'required',
-                    'string',
-                    'max:255',
-                    'unique:surat_keluar,no_surat' // Validasi unik
-                ]),
+                ->columnSpanFull(),
+                
                 FileUpload::make('dokumen')
                         ->label('Arsip')
-                        ->disk('public')
-                        ->acceptedFileTypes(['application/pdf'])    // hanya menerima pdf
-                        ->minSize(50)                               // minimum 50kb
-                        ->maxSize(20480)                            // maximum 20MB
                         ->visibility('private')
                         ->directory('dokumen_surat_keluar')
             ]);
@@ -240,6 +229,14 @@ class SuratKeluarResource extends Resource
                     ->color('danger')
                     ->icon('heroicon-m-trash')
                     ->modalHeading('Hapus Data Karyawan'),
+                // Tambahkan tombol download
+            Tables\Actions\Action::make('download')
+            ->iconButton()
+            ->icon('heroicon-m-document-text')
+            ->color('gray')
+            ->label('Download')
+            ->url(fn (SuratKeluar $record) => route('download-dokumen', $record))
+            ->visible(fn (SuratKeluar $record) => $record->dokumen != null) // Tombol hanya muncul jika ada file dokumen
             ])
             // ->headerActions([
             //     ExportAction::make()

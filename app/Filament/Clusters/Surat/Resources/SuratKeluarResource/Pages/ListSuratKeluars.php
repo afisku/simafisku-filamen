@@ -14,7 +14,7 @@ class ListSuratKeluars extends ListRecords
     {
         return [
             Actions\Action::make('exportSuratKeluar')
-                ->label('EXPORT SURAT KELUAR')
+                ->label('EXPORT EXCEL')
                 ->color('gray')
                 // ->visible(auth()->user()->hasRole('superadmin'))
                 ->url(fn(): string => route('surat.keluar.export.excel')),
