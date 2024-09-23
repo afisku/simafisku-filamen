@@ -237,8 +237,7 @@ class SuratKeluarResource extends Resource
                 Tables\Actions\EditAction::make()
                     ->iconButton()
                     ->color('warning')
-                    ->icon('heroicon-m-pencil-square')
-                    ->disabled(fn ($record) => true),
+                    ->icon('heroicon-m-pencil-square'),
                 Tables\Actions\DeleteAction::make()
                     ->iconButton()
                     ->color('danger')
