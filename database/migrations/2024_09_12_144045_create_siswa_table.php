@@ -40,15 +40,17 @@ return new class extends Migration
             $table->integer('dari_bersaudara')->nullable();
             $table->string('foto')->nullable();
             $table->string('doc_mutasi')->nullable();
-            $table->unsignedBigInteger('status_siswa_id')->nullable();
-            $table->unsignedBigInteger('tahun_ajaran_id')->nullable();
+            $table->unsignedBigInteger('status_siswa_id');
+            $table->unsignedBigInteger('tahun_ajaran_id');
+            $table->unsignedBigInteger('ortu_siswa_id')->nullable();
             $table->timestamps();
 
-            $table->foreign('status_siswa_id')->references('id')->on('status_siswa')->onDelete('cascade');
-            $table->foreign('tahun_ajaran_id')->references('id')->on('tahun_ajaran')->onDelete('cascade');
-            $table->foreign('transportasi_id')->references('id')->on('transportasi')->onDelete('cascade');
-            $table->foreign('jarak_rumah_id')->references('id')->on('jarak_rumah')->onDelete('cascade');
-            $table->foreign('agama_id')->references('id')->on('agama')->onDelete('cascade');
+            $table->foreign('status_siswa_id')->references('id')->on('status_siswa');
+            $table->foreign('tahun_ajaran_id')->references('id')->on('tahun_ajaran')->onUpdate('cascade');
+            $table->foreign('transportasi_id')->references('id')->on('transportasi')->onDelete('set null');
+            $table->foreign('jarak_rumah_id')->references('id')->on('jarak_rumah')->onDelete('set null');
+            $table->foreign('agama_id')->references('id')->on('agama')->onDelete('set null');
+            $table->foreign('ortu_siswa_id')->references('id')->on('ortu_siswa')->onDelete('set null');
             
         });
     }

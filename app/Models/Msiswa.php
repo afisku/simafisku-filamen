@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Msiswa extends Model
 {
@@ -11,111 +12,51 @@ class Msiswa extends Model
 
      // Nama tabel yang digunakan oleh model
      protected $table = 'siswa';
-
-     // Jika kamu tidak menggunakan timestamps di tabel
-     public $timestamps = true;
  
      // Kolom-kolom yang dapat diisi secara massal
      protected $fillable = [
-         'asal_sekolah',
-         'nspn',
-         'nm_siswa',
-         'jk',
-         'nis',
-         'nisn',
-         'nik',
-         'tempat_lahir',
-         'tgl_lahir',
-         'agama_id',
-         'provinsi_asal',
-         'kabkota_asal',
-         'kecamatan_asal',
-         'desalurah_asal',
-         'alamat_asal',
-         'rt_asal',
-         'rw_asal',
-         'kodepos_asal',
-         'transportasi_id',
-         'yatim_piatu',
-         'penyakit',
-         'jarak_rumah_id',
-         'jumlah_saudara',
-         'anak_ke',
-         'dari_bersaudara',
-         'foto',
-         'doc_mutasi',
-         'status_siswa_id',
-         'tahun_ajaran_id',
+         'asal_sekolah', 'nspn', 'nm_siswa', 'jk', 'nisn', 'nis', 'nik', 
+        'tempat_lahir', 'tgl_lahir', 'agama_id', 'provinsi_asal', 'kabkota_asal', 
+        'kecamatan_asal', 'desalurah_asal', 'alamat_asal', 'rt_asal', 'rw_asal', 
+        'kodepos_asal', 'transportasi_id', 'yatim_piatu', 'penyakit', 'jarak_rumah_id', 
+        'jumlah_saudara', 'anak_ke', 'dari_bersaudara', 'foto', 'doc_mutasi', 
+        'status_siswa_id', 'tahun_ajaran_id', 'ortu_siswa_id'
      ];
- 
-     // Definisikan relasi dengan tabel status_siswa
-     public function statusSiswa()
-     {
-         return $this->belongsTo(StatusSiswa::class, 'status_siswa_id');
-     }
- 
-     // Definisikan relasi dengan tabel tahun_ajaran
-     public function tahunAjaran()
-     {
-         return $this->belongsTo(TahunAjaran::class, 'tahun_ajaran_id');
-     }
- 
-     // Definisikan relasi dengan tabel transportasi
-     public function transportasi()
-     {
-         return $this->belongsTo(Transportasi::class, 'transportasi_id');
-     }
- 
-     // Definisikan relasi dengan tabel jarak_rumah
-     public function jarakRumah()
-     {
-         return $this->belongsTo(JarakRumah::class, 'jarak_rumah_id');
-     }
- 
-     // Definisikan relasi dengan tabel agama_ortu
-     public function agamasiswa()
-     {
-         return $this->belongsTo(Agama::class, 'agama_id');
-     }
- 
-     // Definisikan relasi dengan tabel pendidikan_ortu
-     public function pendidikanAyah()
-     {
-         return $this->belongsTo(PendidikanOrtu::class, 'pendidikan_ayah_id');
-     }
- 
-     public function pendidikanIbu()
-     {
-         return $this->belongsTo(PendidikanOrtu::class, 'pendidikan_ibu_id');
-     }
- 
-     // Definisikan relasi dengan tabel pekerjaan_ortu
-     public function pekerjaanAyah()
-     {
-         return $this->belongsTo(PekerjaanOrtu::class, 'pekerjaan_ayah_id');
-     }
- 
-     public function pekerjaanIbu()
-     {
-         return $this->belongsTo(PekerjaanOrtu::class, 'pekerjaan_ibu_id');
-     }
- 
-     // Definisikan relasi dengan tabel penghasilan_ortu
-     public function penghasilanAyah()
-     {
-         return $this->belongsTo(PenghasilanOrtu::class, 'penghasilan_ayah_id');
-     }
- 
-     public function penghasilanIbu()
-     {
-         return $this->belongsTo(PenghasilanOrtu::class, 'penghasilan_ibu_id');
-     }
 
-     public function statusStuden()
-     {
-         return $this->belongsTo(StatusSiswa::class, 'status_siswa_id');
-     }
- 
+    // Relasi ke OrtuSiswa (Many-to-One)
+    public function ortuSiswa() : BelongsTo
+    {
+        return $this->belongsTo(OrtuSiswa::class, 'ortu_siswa_id', 'id');
+    }
+
+    // Relasi ke Agama (Many-to-One)
+    public function agama() : BelongsTo
+    {
+        return $this->belongsTo(Agama::class, 'agama_id', 'id');
+    }
+
+    // Relasi ke Transportasi (Many-to-One)
+    public function transportasi() : BelongsTo
+    {
+        return $this->belongsTo(Transportasi::class, 'transportasi_id', 'id');
+    }
+
+    // Relasi ke JarakRumah (Many-to-One)
+    public function jarakRumah() : BelongsTo
+    {
+        return $this->belongsTo(JarakRumah::class, 'jarak_rumah_id', 'id');
+    }
+
+    // Relasi ke StatusSiswa (Many-to-One)
+    public function statusSiswa() : BelongsTo
+    {
+        return $this->belongsTo(StatusSiswa::class, 'status_siswa_id', 'id');
+    }
+    // Relasi ke TahunAjaran (Many-to-One)
+    public function tahunAjaran() : BelongsTo
+    {
+        return $this->belongsTo(TahunAjaran::class, 'tahun_ajaran_id', 'id');
+    }
      // Accessor untuk nilai null yang diganti dengan '-'
      public function getStatusSiswaIdAttribute($value)
      {

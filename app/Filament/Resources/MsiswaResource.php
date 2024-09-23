@@ -4,21 +4,22 @@ namespace App\Filament\Resources;
 
 use Filament\Forms;
 use Filament\Tables;
+use App\Models\Agama;
 use App\Models\Msiswa;
 use Filament\Forms\Form;
-use App\Models\Agama;
 use Filament\Tables\Table;
+use Filament\Pages\Actions;
 use Filament\Resources\Resource;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\DatePicker;
+use Filament\Tables\Actions\CreateAction;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Forms\Components\Grid as FormGrid;
 use App\Filament\Resources\MsiswaResource\Pages;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Forms\Components\Section as FormSection;
-use App\Filament\Resources\MsiswaResource\RelationManagers;
 
 class MsiswaResource extends Resource
 {
@@ -30,115 +31,144 @@ class MsiswaResource extends Resource
     {
         return $form
             ->schema([
-                FormSection::make('Biodata siswa')
+                FormSection::make('Biodata Siswa')
                 ->schema([
-                        FormGrid::make()
-                        ->schema([
-                            TextInput::make('nm_siswa'),
-                            TextInput::make('nis')
+                    FormGrid::make()
+                    ->schema([
+                        TextInput::make('nm_siswa')
+                            ->label('Nama Siswa')
+                            ->required()
+                            ->placeholder('Masukkan nama lengkap siswa')
+                            ->maxLength(255),
+                        TextInput::make('nis')
+                            ->label('NIS')
                             ->numeric()
                             ->minLength(7)
-                            ->maxLength(7),
-                            TextInput::make('nisn')
+                            ->maxLength(7)
+                            ->required()
+                            ->placeholder('Masukkan NIS (7 digit)')
+                            ->helperText('Wajib 7 digit angka.'),
+                        TextInput::make('nisn')
+                            ->label('NISN')
                             ->numeric()
                             ->minLength(10)
-                            ->maxLength(10),
-                            TextInput::make('nik')
+                            ->maxLength(10)
+                            ->required()
+                            ->placeholder('Masukkan NISN (10 digit)'),
+                        TextInput::make('nik')
+                            ->label('NIK')
                             ->numeric()
                             ->minLength(16)
-                            ->maxLength(16),
-                            Select::make('jk')
-                            ->native(false)
+                            ->maxLength(16)
+                            ->required()
+                            ->placeholder('Masukkan NIK (16 digit)'),
+                        Select::make('jk')
+                            ->label('Jenis Kelamin')
                             ->options([
-                                'L' => 'Laki - Laki',
+                                'L' => 'Laki-Laki',
                                 'P' => 'Perempuan',
-                            ]),
-                            Select::make('agama_id')
-                            ->searchable()
+                            ])
+                            ->required(),
+                        Select::make('agama_id')
                             ->label('Agama')
-                            ->options(Agama::all()->pluck('agama', 'id')),
-                            Select::make('yatim_piatu')
-                                        ->native(false)
-                                        ->options([
-                                            'Yes' => 'Yes',
-                                            'No' => 'No',
-                                        ]),
-                            Textarea::make('penyakit')
+                            ->searchable()
+                            ->options(Agama::all()->pluck('agama', 'id'))
+                            ->required(),
+                        Select::make('yatim_piatu')
+                            ->label('Yatim Piatu')
+                            ->options([
+                                'Yes' => 'Ya',
+                                'No' => 'Tidak',
+                            ])
+                            ->required(),
+                        Textarea::make('penyakit')
+                            ->label('Riwayat Penyakit')
                             ->autosize()
-                            ->placeholder('penyakit yang pernah diderita'),
-                            TextInput::make('jumlah_saudara'),
-                            TextInput::make('anak_ke'),
-                            TextInput::make('dari_bersaudara'),
-                        ])->columns(3),
-                        FormGrid::make()
-                        ->schema([
-                            TextInput::make('tempat_lahir'),
-                            TextInput::make('tgl_lahir'),
-                        ])->columns(2),
-                        FormGrid::make()
-                        ->schema([
-                            TextInput::make('asal_sekolah'),
-                            TextInput::make('nspn'),
-                        ])->columns(2),
-                        FormGrid::make()
-                        ->schema([
-                            TextInput::make('provinsi_asal'),
-                            TextInput::make('kabkota_asal'),
-                            TextInput::make('kecamatan_asal'),
-                            TextInput::make('desalurah_asal'),
-                            TextInput::make('alamat_asal'),
-                            TextInput::make('rt_asal'),
-                            TextInput::make('rw_asal'),
-                            TextInput::make('kodepos_asal'),
-                            TextInput::make('transportasi_id'),
-                            TextInput::make('jarak_rumah_id'),
-                            TextInput::make('kabkota_asal'),
-                        ])->columns(3),
-                        FormGrid::make()
-                        ->schema([
-                            TextInput::make('foto'),
-                            TextInput::make('doc_mutasi'),
-                        ])->columns(2),
-                        FormGrid::make()
-                        ->schema([
-                            TextInput::make('status_siswa_id'),
-                            TextInput::make('tahun_ajaran_id'),
-                        ])->columns(2)
+                            ->placeholder('Masukkan penyakit yang pernah diderita'),
+                        TextInput::make('jumlah_saudara')
+                            ->label('Jumlah Saudara')
+                            ->numeric()
+                            ->required(),
+                        TextInput::make('anak_ke')
+                            ->label('Anak Ke')
+                            ->numeric()
+                            ->required(),
+                        TextInput::make('dari_bersaudara')
+                            ->label('Dari Bersaudara')
+                            ->numeric()
+                            ->required(),
+                    ])->columns(3),
+                    FormGrid::make()
+                    ->schema([
+                        TextInput::make('tempat_lahir')
+                            ->label('Tempat Lahir')
+                            ->required(),
+                        DatePicker::make('tgl_lahir')
+                        ->label('Tanggal Lahir')
+                        ->required(),
+                    ])->columns(2),
+                    FormGrid::make()
+                    ->schema([
+                        TextInput::make('asal_sekolah')
+                            ->label('Asal Sekolah')
+                            ->required(),
+                        TextInput::make('nspn')
+                            ->label('NSPN')
+                            ->numeric()
+                            ->maxLength(10),
+                    ])->columns(2),
                 ]),
                 FormSection::make('Data Ortu / Wali Siswa')
                 ->schema([
                     FormGrid::make()
-                        ->schema([
-                            TextInput::make('nm_ayah'),
-                            TextInput::make('nik_ayah'),
-                            TextInput::make('tahun_lahir_ayah'),
-                            TextInput::make('pendidikan_ayah_id'),
-                            TextInput::make('pekerjaan_ayah_id'),
-                            TextInput::make('penghasilan_ayah_id'),
-                            TextInput::make('nohp_ayah'),
-                        ])->columns(3),
-                        FormGrid::make()
-                        ->schema([
-                            TextInput::make('nm_ibu'),
-                            TextInput::make('nik_ibu'),
-                            TextInput::make('tahun_lahir_ibu'),
-                            TextInput::make('pendidikan_ibu_id'),
-                            TextInput::make('pekerjaan_ibu_id'),
-                            TextInput::make('penghasilan_ibu_id'),
-                            TextInput::make('nohp_ibu'),
-                        ]),
-                        FormGrid::make()
-                        ->schema([
-                            TextInput::make('nm_wali'),
-                            TextInput::make('nik_wali'),
-                            TextInput::make('tahun_lahir_wali'),
-                            TextInput::make('pendidikan_wali_id'),
-                            TextInput::make('pekerjaan_wali_id'),
-                            TextInput::make('penghasilan_wali_id'),
-                            TextInput::make('nohp_wali'),
-                        ])
-                ])
-                
+                    ->schema([
+                        TextInput::make('nm_ayah')
+                            ->label('Nama Ayah')
+                            ->required(),
+                        TextInput::make('nik_ayah')
+                            ->label('NIK Ayah')
+                            ->numeric()
+                            ->minLength(16)
+                            ->maxLength(16)
+                            ->required(),
+                        TextInput::make('tahun_lahir_ayah')
+                            ->label('Tahun Lahir Ayah')
+                            ->numeric()
+                            ->required(),
+                        // Field lainnya seperti pendidikan, pekerjaan, penghasilan Ayah
+                    ])->columns(3),
+                    FormGrid::make()
+                    ->schema([
+                        TextInput::make('nm_ibu')
+                            ->label('Nama Ibu')
+                            ->required(),
+                        TextInput::make('nik_ibu')
+                            ->label('NIK Ibu')
+                            ->numeric()
+                            ->minLength(16)
+                            ->maxLength(16)
+                            ->required(),
+                        TextInput::make('tahun_lahir_ibu')
+                            ->label('Tahun Lahir Ibu')
+                            ->numeric()
+                            ->required(),
+                        // Field lainnya untuk data Ibu
+                    ]),
+                    FormGrid::make()
+                    ->schema([
+                        TextInput::make('nm_wali')
+                            ->label('Nama Wali'),
+                        TextInput::make('nik_wali')
+                            ->label('NIK Wali')
+                            ->numeric()
+                            ->minLength(16)
+                            ->maxLength(16),
+                        TextInput::make('tahun_lahir_wali')
+                            ->label('Tahun Lahir Wali')
+                            ->numeric(),
+                        // Field lainnya untuk data Wali
+                    ])
+                ]),
             ]);
     }
 
@@ -161,41 +191,29 @@ class MsiswaResource extends Resource
                     ->label('Tgl Lahir')
                     ->date('d F Y'),
                 TextColumn::make('statusStuden.status')
+                    ->label('Status')
                     ->badge()
                     ->sortable()
                     ->color(function (string $state): string {
                         return match ($state) {
                             'Aktif' => 'success',
-                            'Nonsatif' => 'danger',
+                            'Nonaktif' => 'danger',
                             'Pindah' => 'primary',
                             'Lulus' => 'primary',
-                            'Cuti' => 'primary',
+                            'Cuti' => 'warning',
                             'Drop Out' => 'danger',
                         };
-                    })
-            ])
-            ->filters([
-                //
+                    }),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
                 Tables\Actions\DeleteBulkAction::make(),
-                ]),
+            ])
+            ->headerActions([
+                CreateAction::make(),
             ]);
-            // ->headerActions([
-            //     Tables\Actions\CreateAction::make(),
-            // ]);
-
-    }
-
-    public static function getRelations(): array
-    {
-        return [
-            //
-        ];
     }
 
     public static function getPages(): array

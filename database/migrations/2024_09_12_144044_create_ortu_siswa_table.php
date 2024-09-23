@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('ortu_siswa', function (Blueprint $table) {
             $table->id();
+            $table->string('nomor_kk')->nullable();
             $table->string('nm_ayah')->nullable();
             $table->string('nik_ayah')->nullable();
             $table->integer('tahun_lahir_ayah')->nullable();
@@ -38,12 +39,12 @@ return new class extends Migration
             $table->timestamps();
 
 
-            $table->foreign('pendidikan_ayah_id')->references('id')->on('pendidikan_ortu')->onDelete('cascade');
-            $table->foreign('pendidikan_ibu_id')->references('id')->on('pendidikan_ortu')->onDelete('cascade');
-            $table->foreign('pekerjaan_ayah_id')->references('id')->on('pekerjaan_ortu')->onDelete('cascade');
-            $table->foreign('pekerjaan_ibu_id')->references('id')->on('pekerjaan_ortu')->onDelete('cascade');
-            $table->foreign('penghasilan_ayah_id')->references('id')->on('penghasilan_ortu')->onDelete('cascade');
-            $table->foreign('penghasilan_ibu_id')->references('id')->on('penghasilan_ortu')->onDelete('cascade');
+            $table->foreign('pendidikan_ayah_id')->references('id')->on('pendidikan_ortu')->onDelete('set null');
+            $table->foreign('pendidikan_ibu_id')->references('id')->on('pendidikan_ortu')->onDelete('set null');
+            $table->foreign('pekerjaan_ayah_id')->references('id')->on('pekerjaan_ortu')->onDelete('set null');
+            $table->foreign('pekerjaan_ibu_id')->references('id')->on('pekerjaan_ortu')->onDelete('set null');
+            $table->foreign('penghasilan_ayah_id')->references('id')->on('penghasilan_ortu')->onDelete('set null');
+            $table->foreign('penghasilan_ibu_id')->references('id')->on('penghasilan_ortu')->onDelete('set null');
         });
     }
 
