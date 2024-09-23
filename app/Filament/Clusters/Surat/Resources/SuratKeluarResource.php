@@ -166,6 +166,8 @@ class SuratKeluarResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->recordAction(null)
+            ->recordUrl(null)
             ->columns([
                 TextColumn::make('No')->state(
                     static function (HasTable $livewire, stdClass $rowLoop): string {

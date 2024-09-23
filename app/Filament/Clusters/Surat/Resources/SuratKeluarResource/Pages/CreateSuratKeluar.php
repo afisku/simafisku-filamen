@@ -10,6 +10,11 @@ class CreateSuratKeluar extends CreateRecord
 {
     protected static string $resource = SuratKeluarResource::class;
 
+    protected function getRedirectUrl(): string
+    {
+    return $this->getResource()::getUrl('index');
+    }
+
     protected function mutateFormDataBeforeCreate(array $data): array
         {
             $data['no_surat'] = $this->data['no_surat'] ?? '';
