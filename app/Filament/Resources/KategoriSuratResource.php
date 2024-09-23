@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Filament\Clusters\DataMasterSiswa\Resources;
+namespace App\Filament\Resources;
 
-use App\Filament\Clusters\DataMasterSiswa;
-use App\Filament\Clusters\DataMasterSiswa\Resources\PekerjaanOrtuResource\Pages;
-use App\Filament\Clusters\DataMasterSiswa\Resources\PekerjaanOrtuResource\RelationManagers;
-use App\Models\PekerjaanOrtu;
+use App\Filament\Resources\KategoriSuratResource\Pages;
+use App\Filament\Resources\KategoriSuratResource\RelationManagers;
+use App\Models\KategoriSurat;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -14,22 +13,20 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class PekerjaanOrtuResource extends Resource
+class KategoriSuratResource extends Resource
 {
-    protected static ?string $model = PekerjaanOrtu::class;
+    protected static ?string $model = KategoriSurat::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
-
-    protected static ?string $cluster = DataMasterSiswa::class;
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('kode')
+                Forms\Components\TextInput::make('kode_kategori')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\TextInput::make('pekerjaan')
+                Forms\Components\TextInput::make('kategori')
                     ->required()
                     ->maxLength(255),
             ]);
@@ -39,9 +36,9 @@ class PekerjaanOrtuResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('kode')
+                Tables\Columns\TextColumn::make('kode_kategori')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('pekerjaan')
+                Tables\Columns\TextColumn::make('kategori')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
@@ -69,7 +66,7 @@ class PekerjaanOrtuResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ManagePekerjaanOrtus::route('/'),
+            'index' => Pages\ManageKategoriSurats::route('/'),
         ];
     }
 }

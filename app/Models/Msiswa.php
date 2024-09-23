@@ -57,6 +57,7 @@ class Msiswa extends Model
     {
         return $this->belongsTo(TahunAjaran::class, 'tahun_ajaran_id', 'id');
     }
+
      // Accessor untuk nilai null yang diganti dengan '-'
      public function getStatusSiswaIdAttribute($value)
      {

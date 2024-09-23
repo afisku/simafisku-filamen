@@ -9,6 +9,8 @@ use App\Models\Msiswa;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
 use Filament\Pages\Actions;
+use App\Models\PekerjaanOrtu;
+use App\Models\PenghasilanOrtu;
 use Filament\Resources\Resource;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
@@ -19,6 +21,7 @@ use Filament\Tables\Actions\CreateAction;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Forms\Components\Grid as FormGrid;
 use App\Filament\Resources\MsiswaResource\Pages;
+use App\Models\PendidikanOrtu;
 use Filament\Forms\Components\Section as FormSection;
 
 class MsiswaResource extends Resource
@@ -135,6 +138,21 @@ class MsiswaResource extends Resource
                             ->label('Tahun Lahir Ayah')
                             ->numeric()
                             ->required(),
+                        Select::make('pendidikan_ayah_id')
+                            ->label('Pendidikan Ayah')
+                            ->options(PendidikanOrtu::all()->pluck('pendidikan', 'id'))
+                            ->required(),
+                        Select::make('pekerjaan_ayah_id')
+                            ->label('Pekerjaan Ayah')
+                            ->options(pekerjaanOrtu::all()->pluck('pekerjaan', 'id'))
+                            ->required(),
+                        Select::make('penghasilan_ayah_id')
+                            ->label('Penghasilan Ayah')
+                            ->options(PenghasilanOrtu::all()->pluck('penghasilan', 'id'))
+                            ->required(),
+                        TextInput::make('nohp_ayah')
+                            ->label('Nomor HP Ayah')
+                            ->tel(),
                         // Field lainnya seperti pendidikan, pekerjaan, penghasilan Ayah
                     ])->columns(3),
                     FormGrid::make()
