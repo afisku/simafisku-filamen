@@ -2,26 +2,33 @@
 
 namespace App\Filament\Resources;
 
+use stdClass;
 use Filament\Forms;
 use Filament\Tables;
 use App\Models\Agama;
 use App\Models\Msiswa;
 use Filament\Forms\Form;
+use App\Models\JarakRumah;
 use Filament\Tables\Table;
+use App\Models\StatusSiswa;
+use App\Models\TahunAjaran;
 use Filament\Pages\Actions;
+use App\Models\Transportasi;
 use App\Models\PekerjaanOrtu;
+use App\Models\PendidikanOrtu;
 use App\Models\PenghasilanOrtu;
 use Filament\Resources\Resource;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Contracts\HasTable;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\FileUpload;
 use Filament\Tables\Actions\CreateAction;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Forms\Components\Grid as FormGrid;
 use App\Filament\Resources\MsiswaResource\Pages;
-use App\Models\PendidikanOrtu;
 use Filament\Forms\Components\Section as FormSection;
 
 class MsiswaResource extends Resource
@@ -119,12 +126,75 @@ class MsiswaResource extends Resource
                             ->label('NSPN')
                             ->numeric()
                             ->maxLength(10),
+                        Select::make('status_siswa_id')
+                            ->label('Status')
+                            ->options(StatusSiswa::all()->pluck('status', 'id'))
+                            ->required(),
+                        Select::make('tahun_ajaran_id')
+                            ->label('Tahun Ajaran')
+                            ->options(TahunAjaran::all()->pluck('ta', 'id'))
+                            ->required(),
+                    ])->columns(2),
+                    FormSection::make('Alamat Asal')
+                    ->schema([
+                        TextInput::make('provinsi_asal')
+                            ->label('Provinsi Asal')
+                            ->required(),
+                        TextInput::make('kabkota_asal')
+                            ->label('Kabupaten/Kota Asal')
+                            ->required(),
+                        TextInput::make('kecamatan_asal')
+                            ->label('Kecamatan Asal')
+                            ->required(),
+                        TextInput::make('desalurah_asal')
+                            ->label('Desa/Lurah Asal')
+                            ->required(),
+                        Textarea::make('alamat_asal')
+                            ->label('Alamat Lengkap')
+                            ->required(),
+                        TextInput::make('rt_asal')
+                            ->label('RT')
+                            ->numeric()
+                            ->required(),
+                        TextInput::make('rw_asal')
+                            ->label('RW')
+                            ->numeric()
+                            ->required(),
+                        TextInput::make('kodepos_asal')
+                            ->label('Kode Pos')
+                            ->numeric()
+                            ->required(),
+                    ])->columns(3),
+
+                FormSection::make('Informasi Lainnya')
+                    ->schema([
+                        Select::make('transportasi_id')
+                            ->label('Transportasi')
+                            ->options(Transportasi::all()->pluck('kendaraan', 'id'))
+                            ->required(),
+                        Select::make('jarak_rumah_id')
+                            ->label('Jarak Rumah')
+                            ->options(JarakRumah::all()->pluck('jarak', 'id'))
+                            ->required(),
+                        FileUpload::make('foto')
+                            ->label('Foto Siswa')
+                            ->image()
+                            ->directory('foto-siswa'),
+                        FileUpload::make('doc_mutasi')
+                            ->label('Dokumen Mutasi')
+                            ->directory('dokumen-mutasi'),
                     ])->columns(2),
                 ]),
                 FormSection::make('Data Ortu / Wali Siswa')
                 ->schema([
                     FormGrid::make()
                     ->schema([
+                        TextInput::make('nomor_kk')
+                            ->label('Nomor KK')
+                            ->numeric()
+                            ->minLength(16)
+                            ->maxLength(16)
+                            ->required(),
                         TextInput::make('nm_ayah')
                             ->label('Nama Ayah')
                             ->required(),
@@ -170,8 +240,22 @@ class MsiswaResource extends Resource
                             ->label('Tahun Lahir Ibu')
                             ->numeric()
                             ->required(),
-                        // Field lainnya untuk data Ibu
-                    ]),
+                        Select::make('pendidikan_ibu_id')
+                            ->label('Pendidikan Ibu')
+                            ->options(PendidikanOrtu::all()->pluck('pendidikan', 'id'))
+                            ->required(),
+                        Select::make('pekerjaan_ibu_id')
+                            ->label('Pekerjaan Ibu')
+                            ->options(pekerjaanOrtu::all()->pluck('pekerjaan', 'id'))
+                            ->required(),
+                        Select::make('penghasilan_ibu_id')
+                            ->label('Penghasilan Ibu')
+                            ->options(PenghasilanOrtu::all()->pluck('penghasilan', 'id'))
+                            ->required(),
+                        TextInput::make('nohp_ibu')
+                            ->label('Nomor HP Ibu')
+                            ->tel(),
+                    ])->columns(3),
                     FormGrid::make()
                     ->schema([
                         TextInput::make('nm_wali')
@@ -184,8 +268,19 @@ class MsiswaResource extends Resource
                         TextInput::make('tahun_lahir_wali')
                             ->label('Tahun Lahir Wali')
                             ->numeric(),
-                        // Field lainnya untuk data Wali
-                    ])
+                        Select::make('pendidikan_wali_id')
+                            ->label('Pendidikan Wali')
+                            ->options(PendidikanOrtu::all()->pluck('pendidikan', 'id')),
+                        Select::make('pekerjaan_wali_id')
+                            ->label('Pekerjaan Wali')
+                            ->options(pekerjaanOrtu::all()->pluck('pekerjaan', 'id')),
+                        Select::make('penghasilan_wali_id')
+                            ->label('Penghasilan Wali')
+                            ->options(PenghasilanOrtu::all()->pluck('penghasilan', 'id')),
+                        TextInput::make('nohp_wali')
+                            ->label('Nomor HP Wali')
+                            ->tel(),
+                    ])->columns(3)
                 ]),
             ]);
     }
@@ -193,7 +288,20 @@ class MsiswaResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->recordAction(null)
+            ->recordUrl(null)
             ->columns([
+
+                TextColumn::make('No')->state(
+                    static function (HasTable $livewire, stdClass $rowLoop): string {
+                        return (string) (
+                            $rowLoop->iteration +
+                            ($livewire->getTableRecordsPerPage() * (
+                                $livewire->getTablePage() - 1
+                            ))
+                        );
+                    }
+                )->rowIndex(),
                 TextColumn::make('nis')
                     ->label('NIS')
                     ->searchable(),
@@ -208,18 +316,19 @@ class MsiswaResource extends Resource
                 TextColumn::make('tgl_lahir')
                     ->label('Tgl Lahir')
                     ->date('d F Y'),
-                TextColumn::make('statusStuden.status')
+                TextColumn::make('statusSiswa.status')
                     ->label('Status')
                     ->badge()
                     ->sortable()
                     ->color(function (string $state): string {
                         return match ($state) {
                             'Aktif' => 'success',
-                            'Nonaktif' => 'danger',
-                            'Pindah' => 'primary',
-                            'Lulus' => 'primary',
+                            'Mutasi Masuk' => 'danger',
+                            'Mutasi Keluar' => 'primary',
+                            'DO' => 'primary',
                             'Cuti' => 'warning',
-                            'Drop Out' => 'danger',
+                            'Lulus' => 'danger',
+                            'Mengundurkan Diri' => 'danger',
                         };
                     }),
             ])

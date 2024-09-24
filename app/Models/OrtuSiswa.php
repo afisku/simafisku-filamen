@@ -13,7 +13,8 @@ class OrtuSiswa extends Model
     protected $table = 'ortu_siswa';
 
     protected $fillable = [
-        'nomor_kk', 'nm_ayah',
+        'nomor_kk',
+        'nm_ayah',
         'nik_ayah',
         'tahun_lahir_ayah',
         'pendidikan_ayah_id',
@@ -26,7 +27,8 @@ class OrtuSiswa extends Model
         'pendidikan_ibu_id',
         'pekerjaan_ibu_id',
         'penghasilan_ibu_id',
-        'nohp_ibu', 'nm_wali',
+        'nohp_ibu', 
+        'nm_wali',
         'nik_wali',
         'tahun_lahir_wali',
         'pendidikan_wali_id',

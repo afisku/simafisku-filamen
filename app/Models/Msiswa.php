@@ -15,12 +15,36 @@ class Msiswa extends Model
  
      // Kolom-kolom yang dapat diisi secara massal
      protected $fillable = [
-         'asal_sekolah', 'nspn', 'nm_siswa', 'jk', 'nisn', 'nis', 'nik', 
-        'tempat_lahir', 'tgl_lahir', 'agama_id', 'provinsi_asal', 'kabkota_asal', 
-        'kecamatan_asal', 'desalurah_asal', 'alamat_asal', 'rt_asal', 'rw_asal', 
-        'kodepos_asal', 'transportasi_id', 'yatim_piatu', 'penyakit', 'jarak_rumah_id', 
-        'jumlah_saudara', 'anak_ke', 'dari_bersaudara', 'foto', 'doc_mutasi', 
-        'status_siswa_id', 'tahun_ajaran_id', 'ortu_siswa_id'
+        'asal_sekolah',
+        'nspn',
+        'nm_siswa',
+        'jk',
+        'nisn',
+        'nis',
+        'nik', 
+        'tempat_lahir',
+        'tgl_lahir',
+        'agama_id',
+        'provinsi_asal',
+        'kabkota_asal', 
+        'kecamatan_asal',
+        'desalurah_asal',
+        'alamat_asal',
+        'rt_asal',
+        'rw_asal', 
+        'kodepos_asal',
+        'transportasi_id',
+        'yatim_piatu',
+        'penyakit',
+        'jarak_rumah_id', 
+        'jumlah_saudara',
+        'anak_ke',
+        'dari_bersaudara',
+        'foto',
+        'doc_mutasi', 
+        'status_siswa_id',
+        'tahun_ajaran_id',
+        'ortu_siswa_id'
      ];
 
     // Relasi ke OrtuSiswa (Many-to-One)

@@ -23,6 +23,8 @@ class DatabaseSeeder extends Seeder
             KaryawanSeeder::class,
             KategoriSuratSeeder::class,
             AgamaSeeder::class,
+            statusSiswaSeeder::class,
+            TransportasiSeeder::class,
         ]);
     }
 }
