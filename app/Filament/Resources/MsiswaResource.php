@@ -18,14 +18,20 @@ use App\Models\PekerjaanOrtu;
 use App\Models\PendidikanOrtu;
 use App\Models\PenghasilanOrtu;
 use Filament\Resources\Resource;
+use Illuminate\Support\HtmlString;
 use Filament\Forms\Components\Select;
+use Filament\Support\Enums\FontWeight;
 use Filament\Forms\Components\Textarea;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Contracts\HasTable;
 use Filament\Forms\Components\TextInput;
+use Filament\Tables\Columns\ImageColumn;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Tables\Actions\CreateAction;
+use Filament\Tables\Columns\Layout\Panel;
+use Filament\Tables\Columns\Layout\Split;
+use Filament\Tables\Columns\Layout\Stack;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Forms\Components\Grid as FormGrid;
 use App\Filament\Resources\MsiswaResource\Pages;
@@ -302,35 +308,58 @@ class MsiswaResource extends Resource
                         );
                     }
                 )->rowIndex(),
-                TextColumn::make('nis')
-                    ->label('NIS')
-                    ->searchable(),
-                TextColumn::make('nisn')
-                    ->label('NISN')
-                    ->searchable(),
-                TextColumn::make('nm_siswa')
-                    ->label('Nama Lengkap')
-                    ->searchable(),
-                TextColumn::make('tempat_lahir')
-                    ->label('Tempat Lahir'),
-                TextColumn::make('tgl_lahir')
-                    ->label('Tgl Lahir')
-                    ->date('d F Y'),
-                TextColumn::make('statusSiswa.status')
-                    ->label('Status')
-                    ->badge()
-                    ->sortable()
-                    ->color(function (string $state): string {
-                        return match ($state) {
-                            'Aktif' => 'success',
-                            'Mutasi Masuk' => 'danger',
-                            'Mutasi Keluar' => 'primary',
-                            'DO' => 'primary',
-                            'Cuti' => 'warning',
-                            'Lulus' => 'danger',
-                            'Mengundurkan Diri' => 'danger',
-                        };
-                    }),
+                Split::make([
+                    Panel::make([
+                        
+                                ImageColumn::make('foto'),
+                                TextColumn::make('nm_siswa')
+                                ->weight(FontWeight::Bold),
+                                Stack::make([
+                                    TextColumn::make('nis')
+                                    ->formatStateUsing(fn (string $state): HtmlString => new HtmlString("<small>NIS: {$state}</small>")),
+                                    TextColumn::make('nisn')
+                                    ->formatStateUsing(fn (string $state): HtmlString => new HtmlString("<small>NISN: {$state}</small>")),
+                                    TextColumn::make('tempat_lahir')
+                                        ->label('Tempat Lahir'),
+                                    TextColumn::make('tgl_lahir')
+                                        ->label('Tgl Lahir')
+                                        ->date('d F Y'),
+                                ])->visibleFrom('md'),
+                            
+                    ])
+                ]),
+                // TextColumn::make('nm_siswa')
+                // ->description(fn (Msiswa $record): string => $record->nis)
+                // ->description(fn (Msiswa $record): string => $record->nisn),
+                // TextColumn::make('nis')
+                //     ->label('NIS')
+                //     ->searchable(),
+                // TextColumn::make('nisn')
+                //     ->label('NISN')
+                //     ->searchable(),
+                // TextColumn::make('nm_siswa')
+                //     ->label('Nama Lengkap')
+                //     ->searchable(),
+                // TextColumn::make('tempat_lahir')
+                //     ->label('Tempat Lahir'),
+                // TextColumn::make('tgl_lahir')
+                //     ->label('Tgl Lahir')
+                //     ->date('d F Y'),
+                // TextColumn::make('statusSiswa.status')
+                //     ->label('Status')
+                //     ->badge()
+                //     ->sortable()
+                //     ->color(function (string $state): string {
+                //         return match ($state) {
+                //             'Aktif' => 'success',
+                //             'Mutasi Masuk' => 'danger',
+                //             'Mutasi Keluar' => 'primary',
+                //             'DO' => 'primary',
+                //             'Cuti' => 'warning',
+                //             'Lulus' => 'danger',
+                //             'Mengundurkan Diri' => 'danger',
+                //         };
+                //     }),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
