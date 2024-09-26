@@ -25,13 +25,16 @@ use Filament\Forms\Components\Textarea;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Contracts\HasTable;
 use Filament\Forms\Components\TextInput;
+use Filament\Tables\Columns\ColumnGroup;
 use Filament\Tables\Columns\ImageColumn;
+use Filament\Tables\Columns\Layout\Grid;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Tables\Actions\CreateAction;
 use Filament\Tables\Columns\Layout\Panel;
 use Filament\Tables\Columns\Layout\Split;
 use Filament\Tables\Columns\Layout\Stack;
+use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Forms\Components\Grid as FormGrid;
 use App\Filament\Resources\MsiswaResource\Pages;
@@ -308,26 +311,69 @@ class MsiswaResource extends Resource
                         );
                     }
                 )->rowIndex(),
-                Split::make([
-                    Panel::make([
-                        
-                                ImageColumn::make('foto'),
-                                TextColumn::make('nm_siswa')
-                                ->weight(FontWeight::Bold),
-                                Stack::make([
-                                    TextColumn::make('nis')
-                                    ->formatStateUsing(fn (string $state): HtmlString => new HtmlString("<small>NIS: {$state}</small>")),
-                                    TextColumn::make('nisn')
-                                    ->formatStateUsing(fn (string $state): HtmlString => new HtmlString("<small>NISN: {$state}</small>")),
-                                    TextColumn::make('tempat_lahir')
-                                        ->label('Tempat Lahir'),
-                                    TextColumn::make('tgl_lahir')
-                                        ->label('Tgl Lahir')
-                                        ->date('d F Y'),
-                                ])->visibleFrom('md'),
-                            
-                    ])
-                ]),
+
+                // Split::make([
+                    ImageColumn::make('foto')
+                    ->circular(),                    
+                        // Panel::make([
+                        TextColumn::make('nm_siswa')
+                        ->weight(FontWeight::Bold)
+                        ->searchable()
+                        ->sortable()
+                        ->description(fn (Msiswa $record): string => $record->nisn),
+                        TextColumn::make('nis'),
+                        // ->formatStateUsing(fn (string $state): HtmlString => new HtmlString("<small>NIS: {$state}</small>")),
+                        // TextColumn::make('nisn'),
+                        // ->formatStateUsing(fn (string $state): HtmlString => new HtmlString("<small>NISN: {$state}</small>")),
+                    // ]),
+                    ColumnGroup::make('Tempat, Tanggal Lahir', [
+                    TextColumn::make('tempat_lahir')
+                        ->label('Tempat Lahir'),
+                    TextColumn::make('tgl_lahir')
+                        ->label('Tgl Lahir')
+                        ->date('d F Y'),
+                    ]),
+                        TextColumn::make('jk')
+                        ->label('JK'),
+                        ColumnGroup::make('Nama Orang Tua', [
+                            TextColumn::make('ortuSiswa.nm_ayah')
+                                ->label('Ayah'),
+                            TextColumn::make('ortuSiswa.nm_ibu')
+                                ->label('Ibu'),
+                        ]),
+                        TextColumn::make('alamat_asal')
+                        ->label('Alamat')
+                        ->words(10),
+                        ColumnGroup::make('Pekerjaan', [
+                            TextColumn::make('ortuSiswa.pekerjaanAyah.kode')->label('Ayah'),
+                            TextColumn::make('ortuSiswa.pekerjaanIbu.kode')->label('Ibu'),
+                        ]),
+                        ColumnGroup::make('Pekndidikan', [
+                            TextColumn::make('ortuSiswa.pendidikanAyah.kode')->label('Ayah'),
+                            TextColumn::make('ortuSiswa.pendidikanIbu.kode')->label('Ibu'),
+                        ]),
+                        ColumnGroup::make('Penghasilan', [
+                            TextColumn::make('ortuSiswa.penghasilanAyah.kode')->label('Ayah'),
+                            TextColumn::make('ortuSiswa.penghasilanIbu.kode')->label('Ibu'),
+                        ]),
+                    
+                    // ]), 
+                
+                                // ImageColumn::make('foto'),
+                                // TextColumn::make('nm_siswa')
+                                // ->weight(FontWeight::Bold),
+                                // Stack::make([
+                                //     TextColumn::make('nis')
+                                //     ->formatStateUsing(fn (string $state): HtmlString => new HtmlString("<small>NIS: {$state}</small>")),
+                                //     TextColumn::make('nisn')
+                                //     ->formatStateUsing(fn (string $state): HtmlString => new HtmlString("<small>NISN: {$state}</small>")),
+                                //     ])->visibleFrom('md'),
+                                //     Grid::make(['md' => 2]) // Mengatur grid untuk layar menengah ke atas dengan 2 kolom
+                                //     ->schema([
+                                //         
+                                //     ]),
+                               
+                
                 // TextColumn::make('nm_siswa')
                 // ->description(fn (Msiswa $record): string => $record->nis)
                 // ->description(fn (Msiswa $record): string => $record->nisn),
@@ -362,7 +408,19 @@ class MsiswaResource extends Resource
                 //     }),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\ViewAction::make()
+                    ->iconButton()
+                    ->color('primary')
+                    ->icon('heroicon-m-eye'),
+                Tables\Actions\EditAction::make()
+                    ->iconButton()
+                    ->color('warning')
+                    ->icon('heroicon-m-pencil-square'),
+                Tables\Actions\DeleteAction::make()
+                    ->iconButton()
+                    ->color('danger')
+                    ->icon('heroicon-m-trash')
+                    ->modalHeading('Hapus Data Karyawan'),
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),

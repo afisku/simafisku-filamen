@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class OrtuSiswa extends Model
 {
@@ -40,5 +41,48 @@ class OrtuSiswa extends Model
     {
         return $this->hasMany(Msiswa::class, 'ortu_siswa_id', 'id');
     }
+
+    public function pekerjaanAyah() : BelongsTo
+    {
+        return $this->belongsTo(PekerjaanOrtu::class, 'pekerjaan_ayah_id', 'id');
+    }
+
+    public function pekerjaanIbu() : BelongsTo
+    {
+        return $this->belongsTo(PekerjaanOrtu::class, 'pekerjaan_ibu_id', 'id');
+    }
+    public function pekerjaanWali() : BelongsTo
+    {
+        return $this->belongsTo(PekerjaanOrtu::class, 'pekerjaan_wali_id', 'id');
+    }
+
+    public function pendidikanAyah() : BelongsTo
+    {
+        return $this->belongsTo(PendidikanOrtu::class, 'pendidikan_ayah_id', 'id');
+    }
+
+    public function pendidikanIbu() : BelongsTo
+    {
+        return $this->belongsTo(PendidikanOrtu::class, 'pendidikan_ibu_id', 'id');
+    }
+    public function pendidikanWali() : BelongsTo
+    {
+        return $this->belongsTo(PendidikanOrtu::class, 'pendidikan_wali_id', 'id');
+    }
+    public function penghasilanAyah() : BelongsTo
+    {
+        return $this->belongsTo(PenghasilanOrtu::class, 'penghasilan_ayah_id', 'id');
+    }
+
+    public function penghasilanIbu() : BelongsTo
+    {
+        return $this->belongsTo(PenghasilanOrtu::class, 'penghasilan_ibu_id', 'id');
+    }
+    public function penghasilanWali() : BelongsTo
+    {
+        return $this->belongsTo(PenghasilanOrtu::class, 'penghasilan_wali_id', 'id');
+    }
+
+    
 
 }
