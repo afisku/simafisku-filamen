@@ -341,20 +341,36 @@ class MsiswaResource extends Resource
                             TextColumn::make('ortuSiswa.nm_ibu')
                                 ->label('Ibu'),
                         ]),
+                        TextColumn::make('statusSiswa.status')
+                    ->label('Status')
+                    ->badge()
+                    ->sortable()
+                    ->color(function (string $state): string {
+                        return match ($state) {
+                            'Aktif' => 'success',
+                            'Mutasi Masuk' => 'danger',
+                            'Mutasi Keluar' => 'primary',
+                            'DO' => 'primary',
+                            'Cuti' => 'warning',
+                            'Lulus' => 'danger',
+                            'Mengundurkan Diri' => 'danger',
+                        };
+                    }),
                         TextColumn::make('alamat_asal')
                         ->label('Alamat')
-                        ->words(10),
+                        ->words(10)
+                        ->toggleable(isToggledHiddenByDefault: true),
                         ColumnGroup::make('Pekerjaan', [
-                            TextColumn::make('ortuSiswa.pekerjaanAyah.kode')->label('Ayah'),
-                            TextColumn::make('ortuSiswa.pekerjaanIbu.kode')->label('Ibu'),
+                            TextColumn::make('ortuSiswa.pekerjaanAyah.kode')->label('Ayah')->toggleable(isToggledHiddenByDefault: true),
+                            TextColumn::make('ortuSiswa.pekerjaanIbu.kode')->label('Ibu')->toggleable(isToggledHiddenByDefault: true),
                         ]),
                         ColumnGroup::make('Pekndidikan', [
-                            TextColumn::make('ortuSiswa.pendidikanAyah.kode')->label('Ayah'),
-                            TextColumn::make('ortuSiswa.pendidikanIbu.kode')->label('Ibu'),
+                            TextColumn::make('ortuSiswa.pendidikanAyah.kode')->label('Ayah')->toggleable(isToggledHiddenByDefault: true),
+                            TextColumn::make('ortuSiswa.pendidikanIbu.kode')->label('Ibu')->toggleable(isToggledHiddenByDefault: true),
                         ]),
                         ColumnGroup::make('Penghasilan', [
-                            TextColumn::make('ortuSiswa.penghasilanAyah.kode')->label('Ayah'),
-                            TextColumn::make('ortuSiswa.penghasilanIbu.kode')->label('Ibu'),
+                            TextColumn::make('ortuSiswa.penghasilanAyah.kode')->label('Ayah')->toggleable(isToggledHiddenByDefault: true),
+                            TextColumn::make('ortuSiswa.penghasilanIbu.kode')->label('Ibu')->toggleable(isToggledHiddenByDefault: true),
                         ]),
                     
                     // ]), 
