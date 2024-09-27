@@ -33,6 +33,7 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->login()
+            ->maxContentWidth('full')
             ->brandName('SIM4FISKU')
             ->brandLogo(asset('images/logo.png'))
             ->sidebarCollapsibleOnDesktop('true')

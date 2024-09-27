@@ -35,7 +35,9 @@ class ListMsiswas extends ListRecords
         Msiswa::create([
             'nis' => '123',
             'nisn' => '1234',
-            'nm_siswa' => 'edy saputra',
+            'nm_siswa' => 'Yugo pratama',
+            'status_siswa_id' => '1',
+            'tahun_ajaran_id' => '1',
         ]);
     }
 }
