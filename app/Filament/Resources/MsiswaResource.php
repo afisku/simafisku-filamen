@@ -300,7 +300,6 @@ class MsiswaResource extends Resource
             ->recordAction(null)
             ->recordUrl(null)
             ->columns([
-
                 TextColumn::make('No')->state(
                     static function (HasTable $livewire, stdClass $rowLoop): string {
                         return (string) (
