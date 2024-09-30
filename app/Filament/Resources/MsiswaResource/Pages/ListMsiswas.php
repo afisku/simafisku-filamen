@@ -32,12 +32,12 @@ class ListMsiswas extends ListRecords
         if ($this->file != ''){
             Excel::import(new ImportDataSiswa, $this->file);
         }
-        Msiswa::create([
-            'nis' => '123',
-            'nisn' => '1234',
-            'nm_siswa' => 'Yugo pratama',
-            'status_siswa_id' => '1',
-            'tahun_ajaran_id' => '1',
-        ]);
+        // Msiswa::create([
+        //     'nis' => '123',
+        //     'nisn' => '1234',
+        //     'nm_siswa' => 'Yugo pratama',
+        //     'status_siswa_id' => '1',
+        //     'tahun_ajaran_id' => '1',
+        // ]);
     }
 }
